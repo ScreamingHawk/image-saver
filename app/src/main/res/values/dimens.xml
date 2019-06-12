@@ -1,3 +1,6 @@
 <resources>
 	<dimen name="fab_margin">16dp</dimen>
+
+	<dimen name="activity_padding">8dp</dimen>
+	<dimen name="empty_padding">16dp</dimen>
 </resources>

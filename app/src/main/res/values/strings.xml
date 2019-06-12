@@ -1,4 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+	<!ENTITY appname "Image Saver">
+	<!ENTITY author "Michael Standen">
+	]>
+
 <resources>
-	<string name="app_name">Image Saver</string>
+	<string name="app_name">&appname;</string>
+
+	<!-- Menu -->
 	<string name="action_settings">Settings</string>
+
+	<string name="folder_list_empty_title">Welcome to Image Saver!</string>
+	<string name="folder_list_empty_body">Please add a save location with the button below.</string>
 </resources>

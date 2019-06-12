@@ -1,6 +1,6 @@
 package link.standen.michael.imagesaver.activity
 
-import android.app.ListActivity
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.util.Log
 import link.standen.michael.imagesaver.R
@@ -9,26 +9,19 @@ import link.standen.michael.imagesaver.R
  * The entry point activity.
  * This activity shows the list of user selected folders.
  */
-class FolderListActivity : ListActivity() {
+class MainActivity : Activity() {
 
 	companion object {
-		const val TAG = "FolderListActivity"
+		const val TAG = "MainActivity"
 		const val PERMISSION_REQUEST_CODE = 2
 	}
 
 	override fun onCreate(savedInstanceState: android.os.Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.folder_list_activity)
-
-		val fab = findViewById<android.support.design.widget.FloatingActionButton>(R.id.fab)
-		fab.setOnClickListener {
-			//TODO FAB implementation
-		}
+		setContentView(R.layout.main_activity)
 
 		// Check for permissions
 		testPermissions()
-
-		//TODO List adapter
 	}
 
 	/**

@@ -6,30 +6,22 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	app:layout_behavior="@string/appbar_scrolling_view_behavior"
-	tools:context="link.standen.michael.imagesaver.activity.FolderListActivity"
-	tools:showIn="@layout/folder_list_activity">
-
-	<ListView
-		android:id="@android:id/list"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentTop="true"
-		android:layout_marginTop="@dimen/activity_padding"
-		app:layout_constraintTop_toTopOf="parent"/>
+	tools:context="link.standen.michael.imagesaver.activity.MainActivity"
+	tools:showIn="@layout/main_activity">
 
 	<LinearLayout
-		android:id="@android:id/empty"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:orientation="vertical"
-		android:visibility="gone">
+		app:layout_constraintTop_toTopOf="parent"
+		android:layout_alignParentTop="true">
 
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:gravity="center_horizontal"
 			android:padding="@dimen/empty_padding"
-			android:text="@string/folder_list_empty_title"
+			android:text="@string/main_title"
 			android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
 
 		<TextView
@@ -37,7 +29,7 @@
 			android:layout_height="wrap_content"
 			android:gravity="center_horizontal"
 			android:padding="@dimen/empty_padding"
-			android:text="@string/folder_list_empty_body"
+			android:text="@string/main_body"
 			android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 	</LinearLayout>
 

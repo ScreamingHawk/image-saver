@@ -1,22 +1,18 @@
 package link.standen.michael.imagesaver.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.os.Parcelable
-import android.provider.OpenableColumns
 import android.support.design.widget.BottomNavigationView
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.ImageView
 import link.standen.michael.imagesaver.R
 import link.standen.michael.imagesaver.saver.SaveUri
 import link.standen.michael.imagesaver.saver.Saver
-import java.io.File
-import java.io.FileOutputStream
 
-class SaverActivity : AppCompatActivity() {
+class SaverActivity : Activity() {
 
 	companion object {
 		const val TAG = "SaverActivity"
@@ -33,10 +29,12 @@ class SaverActivity : AppCompatActivity() {
 				if (doSave()){
 					item.title = getString(R.string.nav_save_success)
 					finish()
+					Log.d(TAG, "Save successful")
 				} else {
 					// Failed. Disable button
 					item.title = getString(R.string.nav_save_failed)
 					item.isEnabled = false
+					Log.e(TAG, "Unable to save")
 				}
 				return@OnNavigationItemSelectedListener true
 			}

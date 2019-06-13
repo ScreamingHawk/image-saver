@@ -16,6 +16,14 @@
 		app:layout_constraintTop_toTopOf="parent"
 		android:layout_alignParentTop="true">
 
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@mipmap/ic_launcher"
+			android:layout_gravity="center_horizontal"
+			android:padding="@dimen/empty_padding"
+			android:contentDescription="@string/logo_description"/>
+
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"

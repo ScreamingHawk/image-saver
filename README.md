@@ -16,17 +16,14 @@ Set up any number of locations on your mobile, and save to them with a single cl
 
 ## Features
 
-* Select any number of locations to save to
 * Save on a single click
-* Configure whether or not gallery and music apps are notified of saves
-* Choose from a range of duplicate file handling options
+* More TBA
 
 ## Un-Features
 
 * No sign up
+* No advertising
 * No requests to rate the app
-* No trail periods
-* No paid upgrades
 
 ## Upcoming Features and Feature Requests
 

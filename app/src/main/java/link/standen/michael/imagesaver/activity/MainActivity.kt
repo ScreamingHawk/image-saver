@@ -1,8 +1,11 @@
 package link.standen.michael.imagesaver.activity
 
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import link.standen.michael.imagesaver.R
 
 /**
@@ -19,6 +22,7 @@ class MainActivity : Activity() {
 	override fun onCreate(savedInstanceState: android.os.Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.main_activity)
+		setActionBar(findViewById(R.id.toolbar))
 
 		// Check for permissions
 		testPermissions()
@@ -40,4 +44,29 @@ class MainActivity : Activity() {
 			requestPermissions(permissions, PERMISSION_REQUEST_CODE)
 		}
 	}
+
+	/**
+	 * Create menu.
+	 */
+	override fun onCreateOptionsMenu(menu: Menu): Boolean {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		menuInflater.inflate(R.menu.main_menu, menu)
+		return true
+	}
+
+	/**
+	 * Handle menu items.
+	 */
+	override fun onOptionsItemSelected(item: MenuItem): Boolean =
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		when (item.itemId) {
+			R.id.action_credits -> {
+				startActivity(Intent(this, CreditsActivity::class.java))
+				true
+			}
+			else ->
+				super.onOptionsItemSelected(item)
+		}
 }

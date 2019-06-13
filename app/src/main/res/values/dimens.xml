@@ -5,4 +5,5 @@
 	<dimen name="activity_padding">16dp</dimen>
 
 	<dimen name="empty_padding">16dp</dimen>
+	<dimen name="credits_padding">16dp</dimen>
 </resources>

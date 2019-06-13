@@ -3,18 +3,41 @@ package link.standen.michael.imagesaver.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.os.Parcelable
+import android.provider.OpenableColumns
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.ImageView
 import link.standen.michael.imagesaver.R
+import link.standen.michael.imagesaver.saver.SaveUri
+import link.standen.michael.imagesaver.saver.Saver
+import java.io.File
+import java.io.FileOutputStream
 
 class SaverActivity : AppCompatActivity() {
+
+	companion object {
+		const val TAG = "SaverActivity"
+		const val DEFAULT_FILENAME = "image.png"
+	}
+
+	var uri: Uri? = null
 
 	private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 		when (item.itemId) {
 			R.id.navigation_save -> {
-				//TODO Save the image
+				// Save the image then exit
+				item.title = getString(R.string.nav_save_saving)
+				if (doSave()){
+					item.title = getString(R.string.nav_save_success)
+					finish()
+				} else {
+					// Failed. Disable button
+					item.title = getString(R.string.nav_save_failed)
+					item.isEnabled = false
+				}
 				return@OnNavigationItemSelectedListener true
 			}
 			R.id.navigation_close -> {
@@ -39,11 +62,27 @@ class SaverActivity : AppCompatActivity() {
 	}
 
 	/**
+	 * Call the required saver
+	 */
+	private fun doSave(): Boolean{
+		var saver: Saver? = null
+		if (uri != null){
+			saver = SaveUri(this, uri!!)
+		}
+		// Call saver
+		if (saver != null){
+			return saver.save()
+		}
+		return false
+	}
+
+	/**
 	 * Handles images received from share
 	 */
 	private fun handleSendImage(intent: Intent) {
 		(intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
-			findViewById<ImageView>(R.id.image).setImageURI(it)
+			uri = it
+			findViewById<ImageView>(R.id.image).setImageURI(uri)
 		}
 	}
 

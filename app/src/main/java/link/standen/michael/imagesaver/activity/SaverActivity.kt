@@ -9,8 +9,8 @@ import android.support.design.widget.BottomNavigationView
 import android.util.Log
 import android.widget.ImageView
 import link.standen.michael.imagesaver.R
-import link.standen.michael.imagesaver.saver.SaveUri
 import link.standen.michael.imagesaver.saver.Saver
+import link.standen.michael.imagesaver.saver.SaverFactory
 
 class SaverActivity : Activity() {
 
@@ -19,14 +19,15 @@ class SaverActivity : Activity() {
 		const val DEFAULT_FILENAME = "image.png"
 	}
 
-	var uri: Uri? = null
+	private val saverFactory = SaverFactory()
+	private var saver: Saver? = null
 
 	private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 		when (item.itemId) {
 			R.id.navigation_save -> {
 				// Save the image then exit
 				item.title = getString(R.string.nav_save_saving)
-				if (doSave()){
+				if (saver?.save() == true){
 					item.title = getString(R.string.nav_save_success)
 					finish()
 					Log.d(TAG, "Save successful")
@@ -52,35 +53,24 @@ class SaverActivity : Activity() {
 		setContentView(R.layout.saver_activity)
 		findViewById<BottomNavigationView>(R.id.nav_view).setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
-		if (intent.action == Intent.ACTION_SEND && intent.type?.startsWith("image/") == true) {
-			handleSendImage(intent) // Handle single image being sent
-		} else {
-			//TODO Handle not image
-		}
-	}
+		updateImage(intent)
 
-	/**
-	 * Call the required saver
-	 */
-	private fun doSave(): Boolean{
-		var saver: Saver? = null
-		if (uri != null){
-			saver = SaveUri(this, uri!!)
-		}
-		// Call saver
-		if (saver != null){
-			return saver.save()
-		}
-		return false
+		// Create saver in background
+		Thread {
+			saver = saverFactory.createSaver(this, intent)
+		}.start()
 	}
 
 	/**
 	 * Handles images received from share
 	 */
-	private fun handleSendImage(intent: Intent) {
-		(intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
-			uri = it
-			findViewById<ImageView>(R.id.image).setImageURI(uri)
+	private fun updateImage(intent: Intent) {
+		if (intent.action == Intent.ACTION_SEND && intent.type?.startsWith("image/") == true) {
+			(intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
+				findViewById<ImageView>(R.id.image).setImageURI(it)
+			}
+		} else {
+			//TODO Handle not image
 		}
 	}
 

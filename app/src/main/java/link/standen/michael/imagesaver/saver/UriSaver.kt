@@ -10,7 +10,7 @@ import link.standen.michael.imagesaver.activity.SaverActivity
 import java.io.File
 import java.io.FileOutputStream
 
-class SaveUri(private val context: Context, private val uri: Uri): Saver {
+class UriSaver(private val context: Context, private val uri: Uri): Saver {
 
 	/**
 	 * Save the shared uri

@@ -16,7 +16,7 @@ class SaverFactory {
 	fun createSaver(context: Context, intent: Intent): Saver? {
 		if (intent.action == Intent.ACTION_SEND && intent.type?.startsWith("image/") == true) {
 			(intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
-				return SaveUri(context, it)
+				return UriSaver(context, it)
 			}
 		}
 		return null

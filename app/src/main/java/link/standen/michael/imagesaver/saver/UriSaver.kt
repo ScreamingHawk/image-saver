@@ -7,6 +7,7 @@ import android.provider.OpenableColumns
 import android.util.Log
 import link.standen.michael.imagesaver.R
 import link.standen.michael.imagesaver.activity.SaverActivity
+import link.standen.michael.imagesaver.util.StorageHelper
 import java.io.File
 import java.io.FileOutputStream
 
@@ -17,7 +18,7 @@ class UriSaver(private val context: Context, private val uri: Uri): Saver {
 	 */
 	override fun save(): Boolean {
 		var success = false
-		FileOutputStream(File(getPublicAlbumStorageDir(), getFilename())).use { fout ->
+		FileOutputStream(File(StorageHelper.getPublicAlbumStorageDir(context), getFilename())).use { fout ->
 			context.contentResolver.openInputStream(uri)?.buffered()?.use {
 				fout.write(it.readBytes())
 				success = true
@@ -48,22 +49,6 @@ class UriSaver(private val context: Context, private val uri: Uri): Saver {
 		}
 		Log.d(SaverActivity.TAG, "Filename: $fname")
 		return fname!!
-	}
-
-	/**
-	 * Returns the folder to save into
-	 * https://developer.android.com/training/data-storage/files
-	 */
-	private fun getPublicAlbumStorageDir(): File? {
-		val folder = File(
-			Environment.getExternalStoragePublicDirectory(
-				Environment.DIRECTORY_PICTURES), context.getString(R.string.folder_name))
-		// Make directory if doesn't exist
-		if (folder.mkdirs()){
-			// Create .nomedia file
-			File(folder.path, ".nomedia").createNewFile()
-		}
-		return folder
 	}
 
 }

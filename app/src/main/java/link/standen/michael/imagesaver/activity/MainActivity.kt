@@ -35,7 +35,8 @@ class MainActivity : Activity() {
 		val permissions = listOf(
 			// All available permissions
 			android.Manifest.permission.READ_EXTERNAL_STORAGE,
-			android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+			android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+			android.Manifest.permission.INTERNET
 			// Filter out granted permissions
 		).filter { checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED }.toTypedArray()
 		if (permissions.isNotEmpty()){

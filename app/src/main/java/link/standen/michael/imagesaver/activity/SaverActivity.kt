@@ -27,16 +27,22 @@ class SaverActivity : Activity() {
 			R.id.navigation_save -> {
 				// Save the image then exit
 				item.title = getString(R.string.nav_save_saving)
-				if (saver?.save() == true){
-					item.title = getString(R.string.nav_save_success)
-					finish()
-					Log.d(TAG, "Save successful")
-				} else {
-					// Failed. Disable button
-					item.title = getString(R.string.nav_save_failed)
-					item.isEnabled = false
-					Log.e(TAG, "Unable to save")
-				}
+				Thread {
+					if (saver?.save() == true){
+						runOnUiThread {
+							item.title = getString(R.string.nav_save_success)
+						}
+						finish()
+						Log.d(TAG, "Save successful")
+					} else {
+						// Failed. Disable button
+						runOnUiThread {
+							item.title = getString(R.string.nav_save_failed)
+							item.isEnabled = false
+						}
+						Log.e(TAG, "Unable to save")
+					}
+				}.start()
 				return@OnNavigationItemSelectedListener true
 			}
 			R.id.navigation_close -> {

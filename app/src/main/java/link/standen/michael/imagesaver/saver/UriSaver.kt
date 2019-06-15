@@ -1,10 +1,12 @@
 package link.standen.michael.imagesaver.saver
 
+import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.provider.OpenableColumns
 import android.util.Log
+import android.widget.ImageView
 import link.standen.michael.imagesaver.R
 import link.standen.michael.imagesaver.activity.SaverActivity
 import link.standen.michael.imagesaver.util.StorageHelper
@@ -12,6 +14,13 @@ import java.io.File
 import java.io.FileOutputStream
 
 class UriSaver(private val context: Context, private val uri: Uri): Saver {
+
+	/**
+	 * Load the image
+	 */
+	override fun loadImage(view: ImageView, activity: Activity) {
+		view.setImageURI(uri)
+	}
 
 	/**
 	 * Save the shared uri

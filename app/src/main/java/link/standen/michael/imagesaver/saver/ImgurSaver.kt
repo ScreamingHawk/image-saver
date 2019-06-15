@@ -1,7 +1,10 @@
 package link.standen.michael.imagesaver.saver
 
+import android.app.Activity
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.util.Log
+import android.widget.ImageView
 import link.standen.michael.imagesaver.activity.SaverActivity
 import link.standen.michael.imagesaver.util.StorageHelper
 import org.json.JSONObject
@@ -36,6 +39,15 @@ class ImgurSaver(private val context: Context, url: String): Saver {
 			?.getJSONArray("images")
 			?.getJSONObject(0)
 			?.getString("link")
+	}
+
+	override fun loadImage(view: ImageView, activity: Activity) {
+		val conn = URL(imageLink).openConnection() as HttpURLConnection
+		conn.connect()
+		val bitmap = BitmapFactory.decodeStream(conn.inputStream)
+		activity.runOnUiThread {
+			view.setImageBitmap(bitmap)
+		}
 	}
 
 	/**

@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.support.design.widget.BottomNavigationView
 import android.util.Log
+import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import link.standen.michael.imagesaver.R
 import link.standen.michael.imagesaver.saver.Saver
@@ -59,25 +61,19 @@ class SaverActivity : Activity() {
 		setContentView(R.layout.saver_activity)
 		findViewById<BottomNavigationView>(R.id.nav_view).setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
-		updateImage(intent)
-
 		// Create saver in background
 		Thread {
 			saver = saverFactory.createSaver(this, intent)
-		}.start()
-	}
-
-	/**
-	 * Handles images received from share
-	 */
-	private fun updateImage(intent: Intent) {
-		if (intent.action == Intent.ACTION_SEND && intent.type?.startsWith("image/") == true) {
-			(intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
-				findViewById<ImageView>(R.id.image).setImageURI(it)
+			if (saver != null){
+				val imageView = findViewById<ImageView>(R.id.image)
+				saver?.loadImage(imageView, this)
+				// Show the image
+				runOnUiThread {
+					findViewById<View>(R.id.image_placeholder).visibility = View.GONE
+					imageView.visibility = View.VISIBLE
+				}
 			}
-		} else {
-			//TODO Handle not image
-		}
+		}.start()
 	}
 
 }

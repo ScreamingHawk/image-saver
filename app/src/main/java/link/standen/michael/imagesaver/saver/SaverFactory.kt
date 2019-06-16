@@ -3,7 +3,6 @@ package link.standen.michael.imagesaver.saver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Parcelable
 import android.util.Log
 import link.standen.michael.imagesaver.util.UrlHelper
 
@@ -23,7 +22,7 @@ class SaverFactory {
 	fun createSaver(context: Context, intent: Intent): Saver? {
 		if (intent.action == Intent.ACTION_SEND){
 			if (intent.type?.startsWith("image/") == true) {
-				(intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
+				(intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM))?.let {
 					Log.i(TAG, "Using UriSaver")
 					return UriSaver(context, it)
 				}

@@ -1,18 +1,16 @@
 package link.standen.michael.imagesaver.activity
 
 import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.os.Parcelable
 import android.support.design.widget.BottomNavigationView
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import link.standen.michael.imagesaver.R
 import link.standen.michael.imagesaver.saver.Saver
 import link.standen.michael.imagesaver.saver.SaverFactory
+import link.standen.michael.imagesaver.util.IntentHelper
 
 class SaverActivity : Activity() {
 
@@ -68,6 +66,9 @@ class SaverActivity : Activity() {
 				runOnUiThread {
 					findViewById<View>(R.id.image_placeholder).visibility = View.GONE
 					findViewById<View>(R.id.no_saver).visibility = View.VISIBLE
+					IntentHelper.getIntentText(intent)?.let { textExtra ->
+						findViewById<TextView>(R.id.no_saver_link).text = textExtra
+					}
 				}
 			} else {
 				val imageView = findViewById<ImageView>(R.id.image)

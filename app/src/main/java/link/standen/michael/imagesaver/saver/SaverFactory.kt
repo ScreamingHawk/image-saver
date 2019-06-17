@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import link.standen.michael.imagesaver.util.IntentHelper
 import link.standen.michael.imagesaver.util.UrlHelper
 
 /**
@@ -27,14 +28,13 @@ class SaverFactory {
 					return UriSaver(context, it)
 				}
 			}
-			if (intent.type == "text/plain"){
-				(intent.getStringExtra(Intent.EXTRA_TEXT))?.let { originalUrl ->
-					val url = UrlHelper.resolveRedirects(UrlHelper.useHttps(originalUrl))
-					// Find match
-					if (regexMatches(IMGUR_REGEX, url)){
-						Log.i(TAG, "Using ImgurSaver")
-						return ImgurSaver(context, url)
-					}
+			// Get text
+			IntentHelper.getIntentText(intent)?.let { originalUrl ->
+				val url = UrlHelper.resolveRedirects(UrlHelper.useHttps(originalUrl))
+				// Find match
+				if (regexMatches(IMGUR_REGEX, url)){
+					Log.i(TAG, "Using ImgurSaver")
+					return ImgurSaver(context, url)
 				}
 			}
 		}

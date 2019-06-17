@@ -20,7 +20,7 @@
 	<string name="nav_close">Close</string>
 	<string name="image_placeholder">Loading…</string>
 	<string name="sorry">Sorry!!!</string>
-	<string name="cannot_save">Link not supported…</string>
+	<string name="cannot_save">This link is not supported…</string>
 
 	<string name="folder_name">&appname;</string>
 

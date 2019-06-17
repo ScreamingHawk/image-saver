@@ -29,7 +29,7 @@ class SaverFactory {
 			}
 			if (intent.type == "text/plain"){
 				(intent.getStringExtra(Intent.EXTRA_TEXT))?.let { originalUrl ->
-					val url = UrlHelper.resolveRedirects(context, UrlHelper.useHttps(originalUrl))
+					val url = UrlHelper.resolveRedirects(UrlHelper.useHttps(originalUrl))
 					// Find match
 					if (regexMatches(IMGUR_REGEX, url)){
 						Log.i(TAG, "Using ImgurSaver")

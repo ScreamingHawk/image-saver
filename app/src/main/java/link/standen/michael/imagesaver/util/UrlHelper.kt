@@ -1,6 +1,5 @@
 package link.standen.michael.imagesaver.util
 
-import android.content.Context
 import android.util.Log
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
@@ -20,7 +19,7 @@ object UrlHelper {
 	 * Resolves redirects
 	 * @return The URL after resolving redirects, or the input parameter
 	 */
-	fun resolveRedirects(context: Context, url: String): String {
+	fun resolveRedirects(url: String): String {
 		Log.d(TAG, "Checking for redirects for $url")
 
 		var u = url

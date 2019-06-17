@@ -6,6 +6,11 @@
 		  android:title="@string/action_settings"
 		  android:orderInCategory="100"
 		  app:showAsAction="never"/>-->
+	<item
+		android:id="@+id/action_change_log"
+		android:orderInCategory="600"
+		android:title="@string/action_change_log"
+		app:showAsAction="never" />
 	<item android:id="@+id/action_credits"
 		  android:title="@string/action_credits"
 		  android:orderInCategory="900"

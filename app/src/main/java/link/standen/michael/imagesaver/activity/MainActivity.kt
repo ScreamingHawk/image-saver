@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import de.cketti.library.changelog.ChangeLog
 import link.standen.michael.imagesaver.R
 
 /**
@@ -17,6 +18,13 @@ class MainActivity : Activity() {
 	companion object {
 		const val TAG = "MainActivity"
 		const val PERMISSION_REQUEST_CODE = 2
+
+		const val CHANGE_LOG_CSS = """
+				body { padding: 0.8em; }
+				h1 { margin-left: 0px; font-size: 1.2em; }
+				ul { padding-left: 1.2em; }
+				li { margin-left: 0px; }
+			"""
 	}
 
 	override fun onCreate(savedInstanceState: android.os.Bundle?) {
@@ -26,6 +34,27 @@ class MainActivity : Activity() {
 
 		// Check for permissions
 		testPermissions()
+
+		// Show the change log
+		showChangeLog(false)
+	}
+
+	/**
+	 * Show the change log.
+	 * Shows the full change log when nothing is in "What's New" log. Shows "What's New" log otherwise.
+	 * @param force Force the change log to be displayed, if false only displayed if new content.
+	 */
+	private fun showChangeLog(force: Boolean) {
+		val cl = ChangeLog(this, CHANGE_LOG_CSS)
+		if (force || cl.isFirstRun) {
+			if (cl.getChangeLog(false).size == 0){
+				// Force the display of the full dialog list.
+				cl.fullLogDialog.show()
+			} else {
+				// Show only the new stuff.
+				cl.logDialog.show()
+			}
+		}
 	}
 
 	/**
@@ -65,6 +94,10 @@ class MainActivity : Activity() {
 		when (item.itemId) {
 			R.id.action_credits -> {
 				startActivity(Intent(this, CreditsActivity::class.java))
+				true
+			}
+			R.id.action_change_log -> {
+				showChangeLog(true)
 				true
 			}
 			else ->

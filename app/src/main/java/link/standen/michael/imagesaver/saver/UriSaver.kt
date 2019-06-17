@@ -18,8 +18,9 @@ class UriSaver(private val context: Context, private val uri: Uri): Saver {
 	/**
 	 * Load the image
 	 */
-	override fun loadImage(view: ImageView, activity: Activity) {
+	override fun loadImage(view: ImageView, activity: Activity): Boolean {
 		view.setImageURI(uri)
+		return true
 	}
 
 	/**

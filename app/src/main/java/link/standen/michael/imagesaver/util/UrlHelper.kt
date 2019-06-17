@@ -1,6 +1,7 @@
 package link.standen.michael.imagesaver.util
 
 import android.util.Log
+import android.webkit.URLUtil
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
@@ -8,6 +9,11 @@ import java.net.URL
 object UrlHelper {
 
 	private const val TAG = "UrlHelper"
+
+	/**
+	 * Tests if a URL is valid
+	 */
+	fun isUrl(url: String) = URLUtil.isValidUrl(url)
 
 	/**
 	 * Replace http with https

@@ -14,7 +14,8 @@ class SaverFactory {
 
 	companion object {
 		const val TAG = "SaverFactory"
-		const val IMGUR_REGEX = """https?://[m.]?imgur.com/[0-z/]+"""
+		const val IMGUR_REGEX = """^https?://[m.]?imgur.com/[0-z/]+"""
+		const val IMAGE_URL_REGEX = """.*(png|jpg|jpeg|gif)$"""
 	}
 
 	/**
@@ -30,11 +31,17 @@ class SaverFactory {
 			}
 			// Get text
 			IntentHelper.getIntentText(intent)?.let { originalUrl ->
-				val url = UrlHelper.resolveRedirects(UrlHelper.useHttps(originalUrl))
-				// Find match
-				if (regexMatches(IMGUR_REGEX, url)){
-					Log.i(TAG, "Using ImgurSaver")
-					return ImgurSaver(context, url)
+				if (UrlHelper.isUrl(originalUrl)) {
+					val url = UrlHelper.resolveRedirects(UrlHelper.useHttps(originalUrl))
+					// Find match
+					if (regexMatches(IMGUR_REGEX, url)) {
+						Log.i(TAG, "Using ImgurSaver")
+						return ImgurSaver(context, url)
+					}
+					if (regexMatches(IMAGE_URL_REGEX, url)) {
+						Log.i(TAG, "Using ImageUrlSaver")
+						return ImageUrlSaver(context, url)
+					}
 				}
 			}
 		}

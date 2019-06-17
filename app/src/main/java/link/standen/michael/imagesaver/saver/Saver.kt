@@ -12,7 +12,7 @@ interface Saver {
 	 * Load the image into the ImageView
 	 * @param activity Includes Activity for runOnUiThread
  	 */
-	fun loadImage(view: ImageView, activity: Activity)
+	fun loadImage(view: ImageView, activity: Activity): Boolean
 
 	/**
 	 * Saves the file

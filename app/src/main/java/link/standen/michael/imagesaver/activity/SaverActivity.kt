@@ -63,16 +63,13 @@ class SaverActivity : Activity() {
 		Thread {
 			saver = saverFactory.createSaver(this, intent)
 			if (saver == null) {
-				runOnUiThread {
-					findViewById<View>(R.id.image_placeholder).visibility = View.GONE
-					findViewById<View>(R.id.no_saver).visibility = View.VISIBLE
-					IntentHelper.getIntentText(intent)?.let { textExtra ->
-						findViewById<TextView>(R.id.no_saver_link).text = textExtra
-					}
-				}
+				noSaver()
 			} else {
 				val imageView = findViewById<ImageView>(R.id.image)
-				saver?.loadImage(imageView, this)
+				if (saver?.loadImage(imageView, this) != true){
+					// Image loading failed
+					noSaver()
+				}
 				// Show the image
 				runOnUiThread {
 					findViewById<View>(R.id.image_placeholder).visibility = View.GONE
@@ -80,6 +77,20 @@ class SaverActivity : Activity() {
 				}
 			}
 		}.start()
+	}
+
+	/**
+	 * Remove saver, set error message
+	 */
+	private fun noSaver(){
+		saver = null
+		runOnUiThread {
+			findViewById<View>(R.id.image_placeholder).visibility = View.GONE
+			findViewById<View>(R.id.no_saver).visibility = View.VISIBLE
+			IntentHelper.getIntentText(intent)?.let { textExtra ->
+				findViewById<TextView>(R.id.no_saver_link).text = textExtra
+			}
+		}
 	}
 
 }

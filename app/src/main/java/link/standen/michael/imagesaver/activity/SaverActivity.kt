@@ -64,7 +64,12 @@ class SaverActivity : Activity() {
 		// Create saver in background
 		Thread {
 			saver = saverFactory.createSaver(this, intent)
-			if (saver != null){
+			if (saver == null) {
+				runOnUiThread {
+					findViewById<View>(R.id.image_placeholder).visibility = View.GONE
+					findViewById<View>(R.id.no_saver).visibility = View.VISIBLE
+				}
+			} else {
 				val imageView = findViewById<ImageView>(R.id.image)
 				saver?.loadImage(imageView, this)
 				// Show the image

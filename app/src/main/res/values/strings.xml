@@ -19,6 +19,8 @@
 	<string name="nav_save_failed">Saving Failed!!!</string>
 	<string name="nav_close">Close</string>
 	<string name="image_placeholder">Loading…</string>
+	<string name="sorry">Sorry!!!</string>
+	<string name="cannot_save">Link not supported…</string>
 
 	<string name="folder_name">&appname;</string>
 

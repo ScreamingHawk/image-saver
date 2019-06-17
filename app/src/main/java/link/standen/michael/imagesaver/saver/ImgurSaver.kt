@@ -9,9 +9,9 @@ import java.io.BufferedReader
 import java.net.HttpURLConnection
 import java.net.URL
 
-class ImgurSaver(private val context: Context, url: String): Saver {
+class ImgurSaver(context: Context, url: String): Saver {
 
-	private val imageLink: String?
+	private val imageUrlSaver: ImageUrlSaver?
 
 	companion object {
 		private const val TAG = "ImgurSaver"
@@ -19,7 +19,7 @@ class ImgurSaver(private val context: Context, url: String): Saver {
 	}
 
 	init {
-		// Create URL
+		// Transform URL to API URL
 		val link = url.replaceBefore("imgur.com", "https://api.")
 			.replace("imgur.com", "imgur.com/3/")
 
@@ -30,28 +30,27 @@ class ImgurSaver(private val context: Context, url: String): Saver {
 		// Read API
 		val response = conn.inputStream.bufferedReader().use(BufferedReader::readText)
 		Log.d(TAG, response)
-		imageLink = JSONObject(response)
+		val imageLink = JSONObject(response)
 			.getJSONObject("data")
 			?.getJSONArray("images")
 			?.getJSONObject(0)
 			?.getString("link")
-	}
-
-	override fun loadImage(view: ImageView, activity: Activity): Boolean {
-		if (imageLink == null){
-			return false
+		// Create ImageUrlSaver
+		if (imageLink == null) {
+			imageUrlSaver = null
+		} else {
+			imageUrlSaver = ImageUrlSaver(context, imageLink)
 		}
-		return ImageUrlSaver(context, imageLink).loadImage(view, activity)
 	}
 
 	/**
-	 * Save the shared uri
+	 * Use the imageUrlSaver to load the image
 	 */
-	override fun save(): Boolean {
-		if (imageLink == null){
-			return false
-		}
-		return ImageUrlSaver(context, imageLink).save()
-	}
+	override fun loadImage(view: ImageView, activity: Activity): Boolean = imageUrlSaver?.loadImage(view, activity) ?: false
+
+	/**
+	 * Use the imageUrlSaver to load the image
+	 */
+	override fun save(): Boolean = imageUrlSaver?.save() ?: false
 
 }

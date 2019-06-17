@@ -12,6 +12,8 @@ import java.net.URL
 
 class ImageUrlSaver(private val context: Context, private val url: String): Saver {
 
+	private var streamBytes: ByteArray? = null
+
 	companion object {
 		private const val TAG = "ImageUrlSaver"
 	}
@@ -19,7 +21,8 @@ class ImageUrlSaver(private val context: Context, private val url: String): Save
 	override fun loadImage(view: ImageView, activity: Activity): Boolean {
 		val conn = URL(url).openConnection() as HttpURLConnection
 		conn.connect()
-		val bitmap = BitmapFactory.decodeStream(conn.inputStream)
+		streamBytes = conn.inputStream.readBytes()
+		val bitmap = BitmapFactory.decodeStream(streamBytes?.inputStream())
 		if (bitmap == null){
 			Log.e(TAG, "Unable to load image")
 			return false
@@ -38,11 +41,18 @@ class ImageUrlSaver(private val context: Context, private val url: String): Save
 
 		val file = File(StorageHelper.getPublicAlbumStorageDir(context), getFilename())
 
-		val conn = URL(url).openConnection() as HttpURLConnection
-		conn.connect()
-		conn.inputStream.use { bis ->
-			StorageHelper.saveStream(bis, file)
-			success = true
+		if (streamBytes == null) {
+			val conn = URL(url).openConnection() as HttpURLConnection
+			conn.connect()
+			conn.inputStream.use { bis ->
+				StorageHelper.saveStream(bis, file)
+				success = true
+			}
+		} else {
+			streamBytes?.inputStream()?.use { bis ->
+				StorageHelper.saveStream(bis, file)
+				success = true
+			}
 		}
 
 		return success

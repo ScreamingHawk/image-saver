@@ -2,12 +2,10 @@ package link.standen.michael.imagesaver.util
 
 import android.content.Context
 import android.os.Environment
-import link.standen.michael.imagesaver.R
 import java.io.File
 import java.io.InputStream
 import android.util.Log
 import java.io.FileOutputStream
-
 
 object StorageHelper {
 
@@ -23,10 +21,25 @@ object StorageHelper {
 				Environment.DIRECTORY_PICTURES), PreferenceHelper.getFolderName(context))
 		// Make directory if doesn't exist
 		if (folder.mkdirs()){
-			// Create .nomedia file
-			File(folder.path, ".nomedia").createNewFile()
+			// Create .nomedia file if required
+			if (PreferenceHelper.getNoMedia(context)){
+				File(folder.path, ".nomedia").createNewFile()
+			}
 		}
 		return folder
+	}
+
+	/**
+	 * Create or delete the nomedia file
+	 */
+	fun updateNoMedia(context: Context, create: Boolean? = null){
+		val doCreate = create ?: PreferenceHelper.getNoMedia(context)
+		val nomedia = File(getPublicAlbumStorageDir(context)?.path, ".nomedia")
+		if (doCreate){
+			nomedia.createNewFile()
+		} else {
+			nomedia.delete()
+		}
 	}
 
 	/**

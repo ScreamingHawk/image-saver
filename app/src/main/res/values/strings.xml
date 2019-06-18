@@ -26,9 +26,12 @@
 
 	<!-- Settings -->
 	<string name="title_activity_settings">Settings</string>
-	<string name="setting_folder_name_key">folder_name</string>
+
 	<string name="setting_folder_name_title">Folder name</string>
-	<string name="setting_folder_name_default">Folder name</string>
+	<string name="setting_folder_name_default">&appname;</string>
+
+	<string name="setting_no_media_title">Hide saved images</string>
+	<string name="setting_no_media_summary">Prevent images showing in gallery applications.</string>
 
 	<!-- Credits -->
 	<string name="credits_version">v%1$s</string>

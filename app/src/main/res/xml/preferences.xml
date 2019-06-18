@@ -1,9 +1,15 @@
 <androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<EditTextPreference
-		app:key="@string/setting_folder_name_key"
+		app:key="folder_name"
 		app:title="@string/setting_folder_name_title"
 		app:useSimpleSummaryProvider="true"
 		app:defaultValue="@string/setting_folder_name_default" />
+
+	<CheckBoxPreference
+		app:key="no_media"
+		app:title="@string/setting_no_media_title"
+		app:summary="@string/setting_no_media_summary"
+		app:defaultValue="false" />
 
 </androidx.preference.PreferenceScreen>

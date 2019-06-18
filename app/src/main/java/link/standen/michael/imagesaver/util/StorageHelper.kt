@@ -20,7 +20,7 @@ object StorageHelper {
 	fun getPublicAlbumStorageDir(context: Context): File? {
 		val folder = File(
 			Environment.getExternalStoragePublicDirectory(
-				Environment.DIRECTORY_PICTURES), context.getString(R.string.folder_name))
+				Environment.DIRECTORY_PICTURES), PreferenceHelper.getFolderName(context))
 		// Make directory if doesn't exist
 		if (folder.mkdirs()){
 			// Create .nomedia file

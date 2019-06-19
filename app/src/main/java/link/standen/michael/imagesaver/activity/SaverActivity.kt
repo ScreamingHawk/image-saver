@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -21,28 +22,25 @@ class SaverActivity : Activity() {
 
 	private val saverFactory = SaverFactory()
 	private var saver: Saver? = null
+	private var imageLoaded = false
+	private var saveClicked = false
+	private var saverError = false
 
 	private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 		when (item.itemId) {
 			R.id.navigation_save -> {
+				if (saverError){
+					// Error, ignore
+					return@OnNavigationItemSelectedListener true
+				}
 				// Save the image then exit
+				saveClicked = true
 				item.title = getString(R.string.nav_save_saving)
-				Thread {
-					if (saver?.save() == true){
-						runOnUiThread {
-							item.title = getString(R.string.nav_save_success)
-						}
-						finish()
-						Log.d(TAG, "Save successful")
-					} else {
-						// Failed. Disable button
-						runOnUiThread {
-							item.title = getString(R.string.nav_save_failed)
-							item.isEnabled = false
-						}
-						Log.e(TAG, "Unable to save")
-					}
-				}.start()
+				if (imageLoaded) {
+					runSaver(item)
+				} else {
+					Log.d(TAG, "Preparing to save")
+				}
 				return@OnNavigationItemSelectedListener true
 			}
 			R.id.navigation_close -> {
@@ -63,18 +61,51 @@ class SaverActivity : Activity() {
 		Thread {
 			saver = saverFactory.createSaver(this, intent)
 			if (saver == null) {
+				Log.w(TAG, "Saver load failed")
 				noSaver()
 			} else {
+				Log.d(TAG, "Saver load successful")
 				val imageView = findViewById<ImageView>(R.id.image)
 				if (saver?.loadImage(imageView, this) != true){
 					// Image loading failed
+					Log.w(TAG, "Image load failed")
 					noSaver()
+				} else {
+					Log.d(TAG, "Image load successful")
+					// Show the image
+					runOnUiThread {
+						findViewById<View>(R.id.image_placeholder).visibility = View.GONE
+						imageView.visibility = View.VISIBLE
+					}
+					imageLoaded = true
+					if (saveClicked) {
+						runSaver()
+					}
 				}
-				// Show the image
+			}
+		}.start()
+	}
+
+	/**
+	 * Run the saver
+	 */
+	private fun runSaver(saveItem: MenuItem? = null) {
+		Log.d(TAG, "Running saver")
+		val item = saveItem ?: findViewById<BottomNavigationView>(R.id.nav_view).menu.findItem(R.id.navigation_save)
+		Thread {
+			if (saver?.save() == true) {
 				runOnUiThread {
-					findViewById<View>(R.id.image_placeholder).visibility = View.GONE
-					imageView.visibility = View.VISIBLE
+					item.title = getString(R.string.nav_save_success)
 				}
+				finish()
+				Log.d(TAG, "Save successful")
+			} else {
+				// Failed. Disable button
+				runOnUiThread {
+					item.title = getString(R.string.nav_save_failed)
+					item.isEnabled = false
+				}
+				Log.e(TAG, "Unable to save")
 			}
 		}.start()
 	}
@@ -83,6 +114,7 @@ class SaverActivity : Activity() {
 	 * Remove saver, set error message
 	 */
 	private fun noSaver(){
+		saverError = true
 		saver = null
 		runOnUiThread {
 			findViewById<View>(R.id.image_placeholder).visibility = View.GONE

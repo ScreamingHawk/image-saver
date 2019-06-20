@@ -32,7 +32,9 @@ class SaverFactory {
 			// Get text
 			IntentHelper.getIntentText(intent)?.let { originalUrl ->
 				if (UrlHelper.isUrl(originalUrl)) {
+					Log.i(TAG, "Saving Url: $originalUrl")
 					val url = UrlHelper.resolveRedirects(UrlHelper.useHttps(originalUrl))
+					Log.d(TAG, "Converted: $url")
 					// Find match
 					if (regexMatches(IMGUR_REGEX, url)) {
 						Log.i(TAG, "Using ImgurSaver")

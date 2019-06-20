@@ -5,7 +5,9 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.widget.ImageView
+import link.standen.michael.imagesaver.manager.ProgressManager
 import link.standen.michael.imagesaver.util.StorageHelper
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
@@ -18,11 +20,36 @@ class ImageUrlSaver(private val context: Context, private val url: String): Save
 		private const val TAG = "ImageUrlSaver"
 	}
 
+	/**
+	 * Loads the image while updating the progress bar.
+	 */
 	override fun loadImage(view: ImageView, activity: Activity): Boolean {
 		val conn = URL(url).openConnection() as HttpURLConnection
 		conn.connect()
-		streamBytes = conn.inputStream.readBytes()
-		val bitmap = BitmapFactory.decodeStream(streamBytes?.inputStream())
+		val total = conn.contentLength
+		val progress = ProgressManager(activity, total)
+		val outStream = ByteArrayOutputStream()
+		// Read the stream
+		conn.inputStream.use { inStream ->
+			val buff = ByteArray(1024)
+			var count = 0
+			do {
+				val len = inStream.read(buff)
+				count += len
+				// Update the progress bar
+				progress.updateProgress(count)
+				outStream.write(buff)
+			} while (len > 0)
+		}
+		progress.completed()
+		// Convert to byte array
+		streamBytes = outStream.toByteArray()
+		if (streamBytes == null){
+			Log.e(TAG, "Unable to read stream")
+			return false
+		}
+		// Convert to image
+		val bitmap = BitmapFactory.decodeByteArray(streamBytes!!, 0, total)
 		if (bitmap == null){
 			Log.e(TAG, "Unable to load image")
 			return false
@@ -42,15 +69,17 @@ class ImageUrlSaver(private val context: Context, private val url: String): Save
 		val file = File(StorageHelper.getPublicAlbumStorageDir(context), getFilename())
 
 		if (streamBytes == null) {
+			// Read from URL
 			val conn = URL(url).openConnection() as HttpURLConnection
 			conn.connect()
-			conn.inputStream.use { bis ->
-				StorageHelper.saveStream(bis, file)
+			conn.inputStream.use { inStream ->
+				StorageHelper.saveStream(inStream, file)
 				success = true
 			}
 		} else {
-			streamBytes?.inputStream()?.use { bis ->
-				StorageHelper.saveStream(bis, file)
+			// Use stored bytes
+			streamBytes?.inputStream()?.use { inStream ->
+				StorageHelper.saveStream(inStream, file)
 				success = true
 			}
 		}

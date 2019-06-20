@@ -35,6 +35,7 @@ class ImgurSaver(context: Context, url: String): Saver {
 			?.getJSONArray("images")
 			?.getJSONObject(0)
 			?.getString("link")
+		Log.d(TAG, "Imgur image link: $imageLink")
 		// Create ImageUrlSaver
 		if (imageLink == null) {
 			imageUrlSaver = null

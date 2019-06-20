@@ -57,6 +57,12 @@ class SaverActivity : Activity() {
 		setContentView(R.layout.saver_activity)
 		findViewById<BottomNavigationView>(R.id.nav_view).setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
+		// Display link
+		IntentHelper.getIntentText(intent)?.let { textExtra ->
+			findViewById<TextView>(R.id.intent_link1).text = textExtra
+			findViewById<TextView>(R.id.intent_link2).text = textExtra
+		}
+
 		// Create saver in background
 		Thread {
 			saver = saverFactory.createSaver(this, intent)
@@ -119,9 +125,6 @@ class SaverActivity : Activity() {
 		runOnUiThread {
 			findViewById<View>(R.id.image_placeholder).visibility = View.GONE
 			findViewById<View>(R.id.no_saver).visibility = View.VISIBLE
-			IntentHelper.getIntentText(intent)?.let { textExtra ->
-				findViewById<TextView>(R.id.no_saver_link).text = textExtra
-			}
 		}
 	}
 

@@ -14,7 +14,7 @@ class SaverFactory {
 
 	companion object {
 		const val TAG = "SaverFactory"
-		const val IMGUR_REGEX = """^https?://[m.]?imgur.com/[0-z/]+"""
+		const val IMGUR_REGEX = """^https?:\/\/[m.]?imgur\.com\/[0-z\/]+"""
 		const val IMAGE_URL_REGEX = """.*(png|jpg|jpeg|gif)$"""
 	}
 

@@ -19,6 +19,7 @@ class ProgressManager(private val activity: Activity, private val total: Int) {
 
 	init {
 		if (hasTotal) {
+			Log.d(TAG, "Starting progress with total: $total")
 			activity.runOnUiThread {
 				bar.isIndeterminate = false
 				bar.max = total
@@ -31,7 +32,6 @@ class ProgressManager(private val activity: Activity, private val total: Int) {
 	 */
 	fun updateProgress(progress: Int){
 		if (hasTotal) {
-			Log.d(TAG, "Progress: $progress/$total")
 			activity.runOnUiThread {
 				if (progress >= total) {
 					bar.progress = total
@@ -46,6 +46,7 @@ class ProgressManager(private val activity: Activity, private val total: Int) {
 	 * Progress is at 100%
 	 */
 	fun completed(){
+		Log.d(TAG, "Progress completed")
 		activity.runOnUiThread {
 			bar.max = 1
 			bar.progress = 1

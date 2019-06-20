@@ -33,13 +33,15 @@ class ImageUrlSaver(private val context: Context, private val url: String): Save
 		conn.inputStream.use { inStream ->
 			val buff = ByteArray(1024)
 			var count = 0
-			do {
-				val len = inStream.read(buff)
-				count += len
+			var len = inStream.read(buff)
+			while (len > 0) {
 				// Update the progress bar
+				count += len
 				progress.updateProgress(count)
-				outStream.write(buff)
-			} while (len > 0)
+				// Write bytes
+				outStream.write(buff, 0, len)
+				len = inStream.read(buff)
+			}
 		}
 		progress.completed()
 		// Convert to byte array

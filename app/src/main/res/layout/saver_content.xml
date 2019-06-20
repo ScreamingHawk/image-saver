@@ -35,6 +35,7 @@
 		android:layout_marginTop="@dimen/activity_padding"
 		android:contentDescription="@string/image_placeholder"
 		android:visibility="gone"
+		android:scaleType="centerCrop"
 		app:layout_constraintLeft_toLeftOf="parent"
 		app:layout_constraintRight_toRightOf="parent"
 		app:layout_constraintTop_toTopOf="parent"

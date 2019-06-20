@@ -15,6 +15,7 @@ class SaverFactory {
 	companion object {
 		const val TAG = "SaverFactory"
 		const val IMGUR_REGEX = """^https?:\/\/[m.]?imgur\.com\/[0-z\/]+"""
+		const val REDDIT_REGEX = """^https?:\/\/[0-z]*.?reddit\.com\/[^\s]+"""
 		const val IMAGE_URL_REGEX = """.*(png|jpg|jpeg|gif)$"""
 	}
 
@@ -39,6 +40,10 @@ class SaverFactory {
 					if (regexMatches(IMGUR_REGEX, url)) {
 						Log.i(TAG, "Using ImgurSaver")
 						return ImgurSaver(context, url)
+					}
+					if (regexMatches(REDDIT_REGEX, url)) {
+						Log.i(TAG, "Using RedditSaver")
+						return RedditSaver(context, url)
 					}
 					if (regexMatches(IMAGE_URL_REGEX, url)) {
 						Log.i(TAG, "Using ImageUrlSaver")

@@ -33,7 +33,7 @@
 		android:layout_height="match_parent"
 		android:contentDescription="@string/image_placeholder"
 		android:visibility="gone"
-		android:scaleType="centerCrop"
+		android:scaleType="fitCenter"
 		app:layout_constraintLeft_toLeftOf="parent"
 		app:layout_constraintRight_toRightOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/progress_bar"

@@ -22,10 +22,8 @@ class RedditSaver(context: Context, url: String): Saver {
 
 	init {
 		// Transform URL to API URL
-		val link = url.replaceBefore("?", "")
-			.replaceBefore("#", "")
-			.replace("?", "")
-			.replace("#", "") +
+		val link = url.substringBefore("?")
+			.substringBefore("#") +
 				"/.json"
 
 		// Open it

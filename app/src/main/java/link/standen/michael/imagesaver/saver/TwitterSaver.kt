@@ -2,11 +2,9 @@ package link.standen.michael.imagesaver.saver
 
 import android.app.Activity
 import android.content.Context
-import android.net.Credentials
 import android.util.Base64
 import android.util.Log
 import android.widget.ImageView
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.net.HttpURLConnection
@@ -17,7 +15,7 @@ import java.net.URL
  * https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/get-statuses-show-id
  * GET https://api.twitter.com/1.1/statuses/show.json?id=<id>
  */
-class TwitterSaver(context: Context, url: String): Saver {
+class TwitterSaver(context: Context, url: String): SaverStrategy {
 
 	private var imageUrlSaver: ImageUrlSaver? = null
 

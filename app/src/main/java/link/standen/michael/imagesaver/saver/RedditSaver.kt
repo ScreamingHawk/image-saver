@@ -12,7 +12,7 @@ import java.net.URL
 /**
  * Save reddit links using +".json" API.
  */
-class RedditSaver(context: Context, url: String): Saver {
+class RedditSaver(context: Context, url: String): SaverStrategy {
 
 	private val imageUrlSaver: ImageUrlSaver?
 

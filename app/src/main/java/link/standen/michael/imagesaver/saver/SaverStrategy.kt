@@ -6,7 +6,7 @@ import android.widget.ImageView
 /**
  * Interface for saver classes
  */
-interface Saver {
+interface SaverStrategy {
 
 	/**
 	 * Load the image into the ImageView

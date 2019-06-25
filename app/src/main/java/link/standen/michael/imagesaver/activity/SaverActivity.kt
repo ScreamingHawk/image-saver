@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import link.standen.michael.imagesaver.R
-import link.standen.michael.imagesaver.saver.Saver
+import link.standen.michael.imagesaver.saver.SaverStrategy
 import link.standen.michael.imagesaver.saver.SaverFactory
 import link.standen.michael.imagesaver.util.IntentHelper
 
@@ -21,7 +21,7 @@ class SaverActivity : Activity() {
 	}
 
 	private val saverFactory = SaverFactory()
-	private var saver: Saver? = null
+	private var saver: SaverStrategy? = null
 	private var imageLoaded = false
 	private var saveClicked = false
 	private var saverError = false

@@ -9,7 +9,7 @@ import java.io.BufferedReader
 import java.net.HttpURLConnection
 import java.net.URL
 
-class ImgurSaver(context: Context, url: String): Saver {
+class ImgurSaver(context: Context, url: String): SaverStrategy {
 
 	private val imageUrlSaver: ImageUrlSaver?
 

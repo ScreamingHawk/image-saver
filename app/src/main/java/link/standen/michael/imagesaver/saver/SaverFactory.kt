@@ -23,7 +23,7 @@ class SaverFactory {
 	/**
 	 * Create the relevant saver
 	 */
-	fun createSaver(context: Context, intent: Intent): Saver? {
+	fun createSaver(context: Context, intent: Intent): SaverStrategy? {
 		if (intent.action == Intent.ACTION_SEND){
 			if (intent.type?.startsWith("image/") == true) {
 				(intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM))?.let {

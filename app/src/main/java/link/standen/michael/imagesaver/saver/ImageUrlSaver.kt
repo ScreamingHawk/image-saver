@@ -12,7 +12,7 @@ import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
 
-class ImageUrlSaver(private val context: Context, private val url: String): Saver {
+class ImageUrlSaver(private val context: Context, private val url: String): SaverStrategy {
 
 	private var streamBytes: ByteArray? = null
 

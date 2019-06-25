@@ -1,9 +1,7 @@
 package link.standen.michael.imagesaver.saver
 
-import android.app.Activity
 import android.content.Context
 import android.util.Log
-import android.widget.ImageView
 import org.json.JSONArray
 import java.io.BufferedReader
 import java.net.HttpURLConnection
@@ -12,9 +10,7 @@ import java.net.URL
 /**
  * Save reddit links using +".json" API.
  */
-class RedditSaver(context: Context, url: String): SaverStrategy {
-
-	private val imageUrlSaver: ImageUrlSaver?
+class RedditSaver(context: Context, url: String): EnhancedImageUrlSaver() {
 
 	companion object {
 		private const val TAG = "RedditSaver"
@@ -41,21 +37,9 @@ class RedditSaver(context: Context, url: String): SaverStrategy {
 			?.getString("url")
 		Log.d(TAG, "Reddit image link: $imageLink")
 		// Create ImageUrlSaver
-		if (imageLink == null) {
-			imageUrlSaver = null
-		} else {
+		if (!imageLink.isNullOrBlank()) {
 			imageUrlSaver = ImageUrlSaver(context, imageLink)
 		}
 	}
-
-	/**
-	 * Use the imageUrlSaver to load the image
-	 */
-	override fun loadImage(view: ImageView, activity: Activity): Boolean = imageUrlSaver?.loadImage(view, activity) ?: false
-
-	/**
-	 * Use the imageUrlSaver to load the image
-	 */
-	override fun save(): Boolean = imageUrlSaver?.save() ?: false
 
 }

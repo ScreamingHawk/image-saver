@@ -2,12 +2,12 @@ package link.standen.michael.imagesaver.activity
 
 import android.app.Activity
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.saver_activity.view.*
 import link.standen.michael.imagesaver.R
 import link.standen.michael.imagesaver.saver.SaverStrategy
 import link.standen.michael.imagesaver.saver.SaverFactory
@@ -26,36 +26,10 @@ class SaverActivity : Activity() {
 	private var saveClicked = false
 	private var saverError = false
 
-	private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-		when (item.itemId) {
-			R.id.navigation_save -> {
-				if (saverError){
-					// Error, ignore
-					return@OnNavigationItemSelectedListener true
-				}
-				// Save the image then exit
-				saveClicked = true
-				item.title = getString(R.string.nav_save_saving)
-				if (imageLoaded) {
-					runSaver(item)
-				} else {
-					Log.d(TAG, "Preparing to save")
-				}
-				return@OnNavigationItemSelectedListener true
-			}
-			R.id.navigation_close -> {
-				// Exit
-				finish()
-				return@OnNavigationItemSelectedListener true
-			}
-		}
-		false
-	}
-
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.saver_activity)
-		findViewById<BottomNavigationView>(R.id.nav_view).setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+		findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { fab -> saveClicked(fab as FloatingActionButton) }
 
 		// Display link
 		IntentHelper.getIntentText(intent)?.let { textExtra ->
@@ -93,23 +67,39 @@ class SaverActivity : Activity() {
 	}
 
 	/**
+	 * Save button clicked
+	 */
+	private fun saveClicked(fab: FloatingActionButton) {
+		if (saverError){
+			// Error, ignore
+		}
+		// Save the image then exit
+		saveClicked = true
+		fab.isEnabled = false
+		fab.setImageResource(R.drawable.white_loading)
+		if (imageLoaded) {
+			runSaver(fab)
+		} else {
+			Log.d(TAG, "Preparing to save")
+		}
+	}
+
+	/**
 	 * Run the saver
 	 */
-	private fun runSaver(saveItem: MenuItem? = null) {
+	private fun runSaver(fab: FloatingActionButton = findViewById(R.id.fab)) {
 		Log.d(TAG, "Running saver")
-		val item = saveItem ?: findViewById<BottomNavigationView>(R.id.nav_view).menu.findItem(R.id.navigation_save)
 		Thread {
 			if (saver?.save() == true) {
 				runOnUiThread {
-					item.title = getString(R.string.nav_save_success)
+					fab.setImageResource(R.drawable.white_ok)
 				}
 				finish()
 				Log.d(TAG, "Save successful")
 			} else {
-				// Failed. Disable button
+				// Failed
 				runOnUiThread {
-					item.title = getString(R.string.nav_save_failed)
-					item.isEnabled = false
+					fab.setImageResource(R.drawable.white_error)
 				}
 				Log.e(TAG, "Unable to save")
 			}

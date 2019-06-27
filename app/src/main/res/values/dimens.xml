@@ -7,5 +7,6 @@
 	<dimen name="empty_padding">16dp</dimen>
 	<dimen name="credits_padding">16dp</dimen>
 
+	<dimen name="saver_bar_padding">16dp</dimen>
 	<dimen name="progress_bar_height">2dp</dimen>
 </resources>

@@ -101,5 +101,7 @@ class SaverFactoryTest {
 		assertEquals(ImageUrlSaver::class, toClass(SaverFactory().createSaver(context, createTextIntent("https://michael.standen.link/image.jpg"))))
 		assertEquals(ImageUrlSaver::class, toClass(SaverFactory().createSaver(context, createTextIntent("https://michael.standen.link/image.jpeg"))))
 		assertEquals(ImageUrlSaver::class, toClass(SaverFactory().createSaver(context, createTextIntent("https://michael.standen.link/image.png"))))
+		// Case insensitive
+		assertEquals(ImageUrlSaver::class, toClass(SaverFactory().createSaver(context, createTextIntent("https://michael.standen.link/image.JPEG"))))
 	}
 }

@@ -17,7 +17,7 @@ class SaverFactory {
 		const val IMGUR_REGEX = """^https?:\/\/[m.]?imgur\.com\/[0-z\/]+"""
 		const val REDDIT_REGEX = """^https?:\/\/[0-z]*.?reddit\.com\/[^\s]+"""
 		const val TWITTER_REGEX = """^https?:\/\/twitter\.com\/[0-z]+/status/[0-z]+"""
-		const val IMAGE_URL_REGEX = """.*(?i)(png|jpg|jpeg|gif)$"""
+		const val IMAGE_URL_REGEX = """.*(?i)(png|jpg|jpeg|gif)(\?[^\s]*)?$"""
 	}
 
 	/**

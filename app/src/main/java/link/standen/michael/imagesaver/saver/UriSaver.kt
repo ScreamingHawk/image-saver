@@ -7,6 +7,7 @@ import android.provider.OpenableColumns
 import android.util.Log
 import android.widget.ImageView
 import link.standen.michael.imagesaver.activity.SaverActivity
+import link.standen.michael.imagesaver.manager.ProgressManager
 import link.standen.michael.imagesaver.util.StorageHelper
 import java.io.File
 import java.io.FileOutputStream
@@ -18,6 +19,8 @@ class UriSaver(private val context: Context, private val uri: Uri): SaverStrateg
 	 */
 	override fun loadImage(view: ImageView, activity: Activity): Boolean {
 		view.setImageURI(uri)
+		// Use progress bar with value 1 to force display
+		ProgressManager(activity, 1).completed()
 		return true
 	}
 

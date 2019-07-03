@@ -6,18 +6,18 @@ This app is based on [Phone Saver](https://github.com/ScreamingHawk/phone-saver)
 
 ## Description
 
-Ever hit that share button and really just wanted to save that image on your phone?
-That meme that you send to your friends that would be great in your reaction image folder.
-That screenshot of that Snapchat that you want to hide in a secret folder.
+Ever hit that share button and really just wanted to save that image on your phone? That meme that you send to your friends that would be great in your reaction image folder. That screenshot of that Snapchat that you want to hide in a secret folder.
 
 Well look no further!
 
-Set up any number of locations on your mobile, and save to them with a single click when using Android's share feature.
+No set up required!
+Save with a single click!
+Supports Twitter, Reddit and Imgur (more to come)
 
 ## Features
 
 * Save on a single click
-* More TBA
+* Preview images before you save
 
 ## Un-Features
 
@@ -30,7 +30,7 @@ Set up any number of locations on your mobile, and save to them with a single cl
 All planned enhancements are here: https://github.com/ScreamingHawk/image-saver/labels/enhancement
 
 A number of features have been added!
-If you can't see a similar request, [request yours](https://github.com/ScreamingHawk/image-saver/issues/new) today!
+[Request your feature](https://github.com/ScreamingHawk/image-saver/issues/new) today!
 
 ## Credits
 

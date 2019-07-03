@@ -22,6 +22,7 @@ class CreditsActivity : Activity() {
 		private const val TAG = "CreditsActivity"
 	}
 
+	@Suppress("SpellCheckingInspection")
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.credits_activity)

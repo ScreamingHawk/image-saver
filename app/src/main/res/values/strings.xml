@@ -13,16 +13,9 @@
 	<string name="main_body">Use the share feature to save an image.</string>
 
 	<!-- Saver -->
-	<string name="nav_save">Save</string>
-	<string name="nav_save_saving">Saving…</string>
-	<string name="nav_save_success">Saved!!!</string>
-	<string name="nav_save_failed">Saving Failed!!!</string>
-	<string name="nav_close">Close</string>
 	<string name="image_placeholder">Loading…</string>
 	<string name="sorry">Sorry!!!</string>
 	<string name="cannot_save">This link is not supported…</string>
-
-	<string name="folder_name">&appname;</string>
 
 	<!-- Settings -->
 	<string name="title_activity_settings">Settings</string>

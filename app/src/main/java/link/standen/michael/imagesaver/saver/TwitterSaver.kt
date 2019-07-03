@@ -1,6 +1,5 @@
 package link.standen.michael.imagesaver.saver
 
-import android.content.Context
 import android.util.Base64
 import android.util.Log
 import org.json.JSONObject
@@ -13,7 +12,7 @@ import java.net.URL
  * https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/get-statuses-show-id
  * GET https://api.twitter.com/1.1/statuses/show.json?id=<id>
  */
-class TwitterSaver(context: Context, url: String): EnhancedImageUrlSaver() {
+class TwitterSaver(url: String): EnhancedImageUrlSaver() {
 
 	@Suppress("SpellCheckingInspection")
 	companion object {
@@ -60,7 +59,7 @@ class TwitterSaver(context: Context, url: String): EnhancedImageUrlSaver() {
 			Log.d(TAG, "Twitter image link: $imageLink")
 			// Create ImageUrlSaver
 			if (!imageLink.isNullOrBlank()) {
-				imageUrlSaver = ImageUrlSaver(context, imageLink)
+				imageUrlSaver = ImageUrlSaver(imageLink)
 			}
 		}
 	}

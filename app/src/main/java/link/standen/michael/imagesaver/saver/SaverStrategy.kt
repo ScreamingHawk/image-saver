@@ -1,7 +1,10 @@
 package link.standen.michael.imagesaver.saver
 
 import android.app.Activity
+import android.content.Context
+import android.net.Uri
 import android.widget.ImageView
+import link.standen.michael.imagesaver.util.StorageHelper
 
 /**
  * Interface for saver classes
@@ -15,7 +18,7 @@ interface SaverStrategy {
 	fun loadImage(view: ImageView, activity: Activity): Boolean
 
 	/**
-	 * Saves the file
+	 * Saves the file to the supplied folder
 	 */
-	fun save(): Boolean
+	fun save(context: Context, folder: Uri = StorageHelper.getPublicAlbumStorageDir(context)): Boolean
 }

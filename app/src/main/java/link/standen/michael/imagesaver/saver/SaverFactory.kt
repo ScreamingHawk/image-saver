@@ -1,6 +1,5 @@
 package link.standen.michael.imagesaver.saver
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
@@ -23,12 +22,12 @@ class SaverFactory {
 	/**
 	 * Create the relevant saver
 	 */
-	fun createSaver(context: Context, intent: Intent): SaverStrategy? {
+	fun createSaver(intent: Intent): SaverStrategy? {
 		if (intent.action == Intent.ACTION_SEND){
 			if (intent.type?.startsWith("image/") == true) {
 				(intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM))?.let {
 					Log.i(TAG, "Using UriSaver")
-					return UriSaver(context, it)
+					return UriSaver(it)
 				}
 			}
 			// Get text
@@ -40,19 +39,19 @@ class SaverFactory {
 					// Find match
 					if (regexMatches(IMGUR_REGEX, url)) {
 						Log.i(TAG, "Using ImgurSaver")
-						return ImgurSaver(context, url)
+						return ImgurSaver(url)
 					}
 					if (regexMatches(REDDIT_REGEX, url)) {
 						Log.i(TAG, "Using RedditSaver")
-						return RedditSaver(context, url)
+						return RedditSaver(url)
 					}
 					if (regexMatches(IMAGE_URL_REGEX, url)) {
 						Log.i(TAG, "Using ImageUrlSaver")
-						return ImageUrlSaver(context, url)
+						return ImageUrlSaver(url)
 					}
 					if (regexMatches(TWITTER_REGEX, url)){
 						Log.i(TAG, "Using TwitterSaver")
-						return TwitterSaver(context, url)
+						return TwitterSaver(url)
 					}
 				}
 			}

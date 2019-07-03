@@ -5,14 +5,13 @@ import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
+import android.webkit.MimeTypeMap
 import android.widget.ImageView
+import androidx.documentfile.provider.DocumentFile
 import link.standen.michael.imagesaver.activity.SaverActivity
 import link.standen.michael.imagesaver.manager.ProgressManager
-import link.standen.michael.imagesaver.util.StorageHelper
-import java.io.File
-import java.io.FileOutputStream
 
-class UriSaver(private val context: Context, private val uri: Uri): SaverStrategy {
+class UriSaver(private val uri: Uri): SaverStrategy {
 
 	/**
 	 * Load the image
@@ -27,12 +26,17 @@ class UriSaver(private val context: Context, private val uri: Uri): SaverStrateg
 	/**
 	 * Save the shared uri
 	 */
-	override fun save(): Boolean {
+	override fun save(context: Context, folder: Uri): Boolean {
 		var success = false
-		FileOutputStream(File(StorageHelper.getPublicAlbumStorageDir(context), getFilename())).use { fout ->
-			context.contentResolver.openInputStream(uri)?.buffered()?.use {
-				fout.write(it.readBytes())
-				success = true
+
+		val fname = getFilename(context)
+		// https://stackoverflow.com/a/26765884/2027146
+		DocumentFile.fromTreeUri(context, folder)?.createFile(MimeTypeMap.getFileExtensionFromUrl(fname), fname)?.let { file ->
+			context.contentResolver.openOutputStream(file.uri)?.use { fout ->
+				context.contentResolver.openInputStream(uri)?.buffered()?.use {
+					fout.write(it.readBytes())
+					success = true
+				}
 			}
 		}
 		return success
@@ -41,7 +45,7 @@ class UriSaver(private val context: Context, private val uri: Uri): SaverStrateg
 	/**
 	 * Get the filename from the uri
 	 */
-	private fun getFilename(): String {
+	private fun getFilename(context: Context): String {
 		// Find the actual filename
 		var fname: String? = null
 		if (uri.scheme == "content") {

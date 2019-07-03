@@ -1,6 +1,5 @@
 package link.standen.michael.imagesaver.saver
 
-import android.content.Context
 import android.util.Log
 import org.json.JSONArray
 import java.io.BufferedReader
@@ -10,7 +9,7 @@ import java.net.URL
 /**
  * Save reddit links using +".json" API.
  */
-class RedditSaver(context: Context, url: String): EnhancedImageUrlSaver() {
+class RedditSaver(url: String): EnhancedImageUrlSaver() {
 
 	companion object {
 		private const val TAG = "RedditSaver"
@@ -38,7 +37,7 @@ class RedditSaver(context: Context, url: String): EnhancedImageUrlSaver() {
 		Log.d(TAG, "Reddit image link: $imageLink")
 		// Create ImageUrlSaver
 		if (!imageLink.isNullOrBlank()) {
-			imageUrlSaver = ImageUrlSaver(context, imageLink)
+			imageUrlSaver = ImageUrlSaver(imageLink)
 		}
 	}
 

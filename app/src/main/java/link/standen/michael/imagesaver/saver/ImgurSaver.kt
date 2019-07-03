@@ -1,13 +1,12 @@
 package link.standen.michael.imagesaver.saver
 
-import android.content.Context
 import android.util.Log
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.net.HttpURLConnection
 import java.net.URL
 
-class ImgurSaver(context: Context, url: String): EnhancedImageUrlSaver() {
+class ImgurSaver(url: String): EnhancedImageUrlSaver() {
 
 	companion object {
 		private const val TAG = "ImgurSaver"
@@ -34,7 +33,7 @@ class ImgurSaver(context: Context, url: String): EnhancedImageUrlSaver() {
 		Log.d(TAG, "Imgur image link: $imageLink")
 		// Create ImageUrlSaver
 		if (!imageLink.isNullOrBlank()) {
-			imageUrlSaver = ImageUrlSaver(context, imageLink)
+			imageUrlSaver = ImageUrlSaver(imageLink)
 		}
 	}
 

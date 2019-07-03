@@ -3,16 +3,18 @@ package link.standen.michael.imagesaver.saver
 import android.app.Activity
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
+import android.webkit.MimeTypeMap
 import android.widget.ImageView
+import androidx.documentfile.provider.DocumentFile
 import link.standen.michael.imagesaver.manager.ProgressManager
 import link.standen.michael.imagesaver.util.StorageHelper
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
 
-class ImageUrlSaver(private val context: Context, private val url: String): SaverStrategy {
+class ImageUrlSaver(private val url: String): SaverStrategy {
 
 	private var streamBytes: ByteArray? = null
 
@@ -65,25 +67,31 @@ class ImageUrlSaver(private val context: Context, private val url: String): Save
 	/**
 	 * Save the shared url
 	 */
-	override fun save(): Boolean {
+	override fun save(context: Context, folder: Uri): Boolean {
 		var success = false
 
-		val file = File(StorageHelper.getPublicAlbumStorageDir(context), getFilename())
-
-		if (streamBytes == null) {
-			// Read from URL
-			val conn = URL(url).openConnection() as HttpURLConnection
-			conn.connect()
-			conn.inputStream.use { inStream ->
-				StorageHelper.saveStream(inStream, file)
-				success = true
+		val fname = getFilename()
+		// https://stackoverflow.com/a/26765884/2027146
+		DocumentFile.fromTreeUri(context, folder)?.createFile(MimeTypeMap.getFileExtensionFromUrl(fname), fname)?.let { file ->
+			context.contentResolver.openOutputStream(file.uri)?.use { fout ->
+				if (streamBytes == null) {
+					// Read from URL
+					val conn = URL(url).openConnection() as HttpURLConnection
+					conn.connect()
+					conn.inputStream.use { inStream ->
+						StorageHelper.saveStream(inStream, fout)
+						success = true
+					}
+				} else {
+					// Use stored bytes
+					streamBytes?.inputStream()?.use { inStream ->
+						StorageHelper.saveStream(inStream, fout)
+						success = true
+					}
+				}
 			}
-		} else {
-			// Use stored bytes
-			streamBytes?.inputStream()?.use { inStream ->
-				StorageHelper.saveStream(inStream, file)
-				success = true
-			}
+		} ?: run {
+			Log.e(TAG, "Unable to create file $fname at ${folder.path}")
 		}
 
 		return success

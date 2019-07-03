@@ -1,13 +1,14 @@
 package link.standen.michael.imagesaver.activity
 
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.saver_activity.view.*
 import link.standen.michael.imagesaver.R
 import link.standen.michael.imagesaver.saver.SaverStrategy
 import link.standen.michael.imagesaver.saver.SaverFactory
@@ -18,6 +19,7 @@ class SaverActivity : Activity() {
 	companion object {
 		const val TAG = "SaverActivity"
 		const val DEFAULT_FILENAME = "image.png"
+		const val REQUEST_CODE_FOLDER_SELECT = 2
 	}
 
 	private val saverFactory = SaverFactory()
@@ -30,6 +32,7 @@ class SaverActivity : Activity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.saver_activity)
 		findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { fab -> saveClicked(fab as FloatingActionButton) }
+		findViewById<FloatingActionButton>(R.id.fab2).setOnClickListener { selectLocation() }
 
 		// Display link
 		IntentHelper.getIntentText(intent)?.let { textExtra ->
@@ -39,7 +42,7 @@ class SaverActivity : Activity() {
 
 		// Create saver in background
 		Thread {
-			saver = saverFactory.createSaver(this, intent)
+			saver = saverFactory.createSaver(intent)
 			if (saver == null) {
 				Log.w(TAG, "Saver load failed")
 				noSaver()
@@ -78,7 +81,7 @@ class SaverActivity : Activity() {
 		fab.isEnabled = false
 		fab.setImageResource(R.drawable.white_loading)
 		if (imageLoaded) {
-			runSaver(fab)
+			runSaver(fab=fab)
 		} else {
 			Log.d(TAG, "Preparing to save")
 		}
@@ -87,10 +90,11 @@ class SaverActivity : Activity() {
 	/**
 	 * Run the saver
 	 */
-	private fun runSaver(fab: FloatingActionButton = findViewById(R.id.fab)) {
+	private fun runSaver(fab: FloatingActionButton = findViewById(R.id.fab), folder: Uri? = null) {
 		Log.d(TAG, "Running saver")
 		Thread {
-			if (saver?.save() == true) {
+			val saveResult = if (folder != null) saver?.save(this, folder) else saver?.save(this)
+			if (saveResult == true) {
 				runOnUiThread {
 					fab.setImageResource(R.drawable.white_ok)
 				}
@@ -115,6 +119,32 @@ class SaverActivity : Activity() {
 		runOnUiThread {
 			findViewById<View>(R.id.image_placeholder).visibility = View.GONE
 			findViewById<View>(R.id.no_saver).visibility = View.VISIBLE
+		}
+	}
+
+	/**
+	 * Select save folder location
+	 */
+	private fun selectLocation(){
+		startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE), REQUEST_CODE_FOLDER_SELECT)
+	}
+
+	/**
+	 * Handle activity result
+	 */
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		if (requestCode == REQUEST_CODE_FOLDER_SELECT && resultCode == RESULT_OK) {
+			data?.data?.let { uri ->
+				// Save it into the selected folder
+				Log.i(TAG, "Save location: $uri")
+				// Get perms
+				val perms = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+				contentResolver.takePersistableUriPermission(uri, perms)
+				runSaver(folder=uri)
+				contentResolver.releasePersistableUriPermission(uri, perms)
+			}
+		} else {
+			super.onActivityResult(requestCode, resultCode, data)
 		}
 	}
 

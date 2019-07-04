@@ -25,6 +25,14 @@ class SettingsActivity : AppCompatActivity() {
 		supportActionBar?.setDisplayHomeAsUpEnabled(true)
 	}
 
+	/**
+	 * Handle back button from toolbar
+	 */
+	override fun onSupportNavigateUp(): Boolean {
+		finish()
+		return true
+	}
+
 	class SettingsFragment : PreferenceFragmentCompat() {
 		override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
 			setPreferencesFromResource(R.xml.preferences, rootKey)

@@ -1,7 +1,7 @@
 package link.standen.michael.imagesaver.util
 
 import android.content.Context
-import android.net.Uri
+import android.content.Intent
 import android.os.Environment
 import java.io.File
 import java.io.InputStream
@@ -11,12 +11,13 @@ import java.io.OutputStream
 object StorageHelper {
 
 	private const val TAG = "StorageHelper"
+	const val STORAGE_PERMISSIONS = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
 	/**
 	 * Returns the folder to save into
 	 * https://developer.android.com/training/data-storage/files
 	 */
-	fun getPublicAlbumStorageDir(context: Context): Uri {
+	fun getPublicAlbumStorageDir(context: Context): File {
 		val folder = File(
 			Environment.getExternalStoragePublicDirectory(
 				Environment.DIRECTORY_PICTURES), PreferenceHelper.getFolderName(context))
@@ -27,8 +28,13 @@ object StorageHelper {
 				File(folder.path, ".nomedia").createNewFile()
 			}
 		}
-		return Uri.fromFile(folder)
+		return folder
 	}
+
+	/**
+	 * Returns an output stream to the default location with the filename given.
+	 */
+	fun getDefaultOutputStream(context: Context, fname: String) = File(getPublicAlbumStorageDir(context), fname).outputStream()
 
 	/**
 	 * Create or delete the nomedia file

@@ -20,6 +20,6 @@ abstract class EnhancedImageUrlSaver: SaverStrategy {
 	/**
 	 * Use the imageUrlSaver to load the image
 	 */
-	override fun save(context: Context, folder: Uri): Boolean = imageUrlSaver?.save(context, folder) ?: false
+	override fun save(context: Context, folder: Uri?): Boolean = imageUrlSaver?.save(context, folder) ?: false
 
 }

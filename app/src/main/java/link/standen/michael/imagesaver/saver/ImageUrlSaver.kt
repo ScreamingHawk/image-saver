@@ -11,6 +11,9 @@ import androidx.documentfile.provider.DocumentFile
 import link.standen.michael.imagesaver.manager.ProgressManager
 import link.standen.michael.imagesaver.util.StorageHelper
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -67,33 +70,49 @@ class ImageUrlSaver(private val url: String): SaverStrategy {
 	/**
 	 * Save the shared url
 	 */
-	override fun save(context: Context, folder: Uri): Boolean {
+	override fun save(context: Context, folder: Uri?): Boolean {
 		var success = false
 
 		val fname = getFilename()
 		// https://stackoverflow.com/a/26765884/2027146
-		DocumentFile.fromTreeUri(context, folder)?.createFile(MimeTypeMap.getFileExtensionFromUrl(fname), fname)?.let { file ->
-			context.contentResolver.openOutputStream(file.uri)?.use { fout ->
-				if (streamBytes == null) {
-					// Read from URL
-					val conn = URL(url).openConnection() as HttpURLConnection
-					conn.connect()
-					conn.inputStream.use { inStream ->
-						StorageHelper.saveStream(inStream, fout)
-						success = true
-					}
-				} else {
-					// Use stored bytes
-					streamBytes?.inputStream()?.use { inStream ->
-						StorageHelper.saveStream(inStream, fout)
-						success = true
-					}
+		if (folder != null) {
+			DocumentFile.fromTreeUri(context, folder)?.createFile(
+				MimeTypeMap.getFileExtensionFromUrl(fname),
+				fname
+			)?.let { file ->
+				context.contentResolver.openOutputStream(file.uri)?.use { fout ->
+					success = saveToStream(fout)
 				}
+			} ?: run {
+				Log.e(TAG, "Unable to create file $fname at ${folder.path}")
 			}
-		} ?: run {
-			Log.e(TAG, "Unable to create file $fname at ${folder.path}")
+		} else {
+			// No folder, use default
+			StorageHelper.getDefaultOutputStream(context, fname).use { fout ->
+				success = saveToStream(fout)
+			}
 		}
 
+		return success
+	}
+
+	private fun saveToStream(fout: OutputStream): Boolean{
+		var success = false
+		if (streamBytes == null) {
+			// Read from URL
+			val conn = URL(url).openConnection() as HttpURLConnection
+			conn.connect()
+			conn.inputStream.use { inStream ->
+				StorageHelper.saveStream(inStream, fout)
+				success = true
+			}
+		} else {
+			// Use stored bytes
+			streamBytes?.inputStream()?.use { inStream ->
+				StorageHelper.saveStream(inStream, fout)
+				success = true
+			}
+		}
 		return success
 	}
 

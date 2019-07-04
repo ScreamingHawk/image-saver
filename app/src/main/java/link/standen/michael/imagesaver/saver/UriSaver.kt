@@ -10,6 +10,9 @@ import android.widget.ImageView
 import androidx.documentfile.provider.DocumentFile
 import link.standen.michael.imagesaver.activity.SaverActivity
 import link.standen.michael.imagesaver.manager.ProgressManager
+import link.standen.michael.imagesaver.util.StorageHelper
+import java.io.File
+import java.io.OutputStream
 
 class UriSaver(private val uri: Uri): SaverStrategy {
 
@@ -26,18 +29,32 @@ class UriSaver(private val uri: Uri): SaverStrategy {
 	/**
 	 * Save the shared uri
 	 */
-	override fun save(context: Context, folder: Uri): Boolean {
+	override fun save(context: Context, folder: Uri?): Boolean {
 		var success = false
 
 		val fname = getFilename(context)
-		// https://stackoverflow.com/a/26765884/2027146
-		DocumentFile.fromTreeUri(context, folder)?.createFile(MimeTypeMap.getFileExtensionFromUrl(fname), fname)?.let { file ->
-			context.contentResolver.openOutputStream(file.uri)?.use { fout ->
-				context.contentResolver.openInputStream(uri)?.buffered()?.use {
-					fout.write(it.readBytes())
-					success = true
+		if (folder != null) {
+			// https://stackoverflow.com/a/26765884/2027146
+			DocumentFile.fromTreeUri(context, folder)?.createFile(MimeTypeMap.getFileExtensionFromUrl(fname), fname)
+				?.let { file ->
+					context.contentResolver.openOutputStream(file.uri)?.use { fout ->
+						success = saveToStream(context, fout)
+					}
 				}
+		} else {
+			// No folder, use default
+			StorageHelper.getDefaultOutputStream(context, fname).use { fout ->
+				success = saveToStream(context, fout)
 			}
+		}
+		return success
+	}
+
+	private fun saveToStream(context: Context, fout: OutputStream): Boolean {
+		var success = false
+		context.contentResolver.openInputStream(uri)?.buffered()?.use {
+			fout.write(it.readBytes())
+			success = true
 		}
 		return success
 	}

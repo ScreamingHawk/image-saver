@@ -13,6 +13,7 @@ import link.standen.michael.imagesaver.R
 import link.standen.michael.imagesaver.saver.SaverStrategy
 import link.standen.michael.imagesaver.saver.SaverFactory
 import link.standen.michael.imagesaver.util.IntentHelper
+import link.standen.michael.imagesaver.util.StorageHelper.STORAGE_PERMISSIONS
 
 class SaverActivity : Activity() {
 
@@ -138,10 +139,9 @@ class SaverActivity : Activity() {
 				// Save it into the selected folder
 				Log.i(TAG, "Save location: $uri")
 				// Get perms
-				val perms = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-				contentResolver.takePersistableUriPermission(uri, perms)
+				contentResolver.takePersistableUriPermission(uri, STORAGE_PERMISSIONS)
 				runSaver(folder=uri)
-				contentResolver.releasePersistableUriPermission(uri, perms)
+				contentResolver.releasePersistableUriPermission(uri, STORAGE_PERMISSIONS)
 			}
 		} else {
 			super.onActivityResult(requestCode, resultCode, data)

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+	<release version="1.0.1" versioncode="2">
+		<change>Fix saving to default location</change>
+		<change>Fix settings menu</change>
+		<change>Fix style colours</change>
+	</release>
 	<release version="1.0.0" versioncode="1">
 		<change>Initial release</change>
 	</release>

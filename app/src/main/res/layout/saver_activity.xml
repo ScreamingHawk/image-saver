@@ -84,6 +84,7 @@
 		app:layout_constraintBottom_toBottomOf="parent">
 
 		<TextView
+			android:id="@+id/sorry"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/sorry"
@@ -91,6 +92,7 @@
 			android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
 		<TextView
+			android:id="@+id/saver_error"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/cannot_save"
@@ -102,6 +104,13 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:textAlignment="center" />
+
+		<TextView
+			android:id="@+id/saver_error_message"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textAlignment="center"
+			android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
 	</LinearLayout>
 

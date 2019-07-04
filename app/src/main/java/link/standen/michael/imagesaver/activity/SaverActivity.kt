@@ -94,8 +94,22 @@ class SaverActivity : Activity() {
 	private fun runSaver(fab: FloatingActionButton = findViewById(R.id.fab), folder: Uri? = null) {
 		Log.d(TAG, "Running saver")
 		Thread {
-			val saveResult = if (folder != null) saver?.save(this, folder) else saver?.save(this)
-			if (saveResult == true) {
+			var saveResult = false
+			try {
+				saveResult = (if (folder != null) saver?.save(this, folder) else saver?.save(this)) ?: false
+			} catch (e: Exception){
+				// Catch everything
+				Log.e(TAG, "Saving failed")
+				if (e.message != null) {
+					Log.e(TAG, e.message)
+					runOnUiThread {
+						fab.setImageResource(R.drawable.white_error)
+					}
+					showError(e.message as String, fab)
+					return@Thread
+				}
+			}
+			if (saveResult) {
 				runOnUiThread {
 					fab.setImageResource(R.drawable.white_ok)
 				}
@@ -103,10 +117,8 @@ class SaverActivity : Activity() {
 				Log.d(TAG, "Save successful")
 			} else {
 				// Failed
-				runOnUiThread {
-					fab.setImageResource(R.drawable.white_error)
-				}
 				Log.e(TAG, "Unable to save")
+				showError(fab=fab)
 			}
 		}.start()
 	}
@@ -118,6 +130,27 @@ class SaverActivity : Activity() {
 		saverError = true
 		saver = null
 		runOnUiThread {
+			findViewById<View>(R.id.image_placeholder).visibility = View.GONE
+			findViewById<View>(R.id.no_saver).visibility = View.VISIBLE
+		}
+	}
+
+	/**
+	 * Surface the error message
+	 */
+	private fun showError(message: String? = null, fab: FloatingActionButton? = null){
+		runOnUiThread {
+			// Show sorry error
+			findViewById<TextView>(R.id.sorry).text = getString(R.string.sorry_error)
+			findViewById<TextView>(R.id.saver_error).text = getString(R.string.sorry_error_subtext)
+			if (message != null) {
+				// Show error message
+				findViewById<TextView>(R.id.saver_error_message).text = message
+			}
+			// Block fab
+			fab?.setImageResource(R.drawable.white_error)
+			// Update visibility
+			findViewById<View>(R.id.image).visibility = View.GONE
 			findViewById<View>(R.id.image_placeholder).visibility = View.GONE
 			findViewById<View>(R.id.no_saver).visibility = View.VISIBLE
 		}

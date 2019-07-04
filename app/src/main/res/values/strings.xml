@@ -15,6 +15,8 @@
 	<!-- Saver -->
 	<string name="image_placeholder">Loading…</string>
 	<string name="sorry">Sorry!!!</string>
+	<string name="sorry_error">Sorry an error occurred!!!</string>
+	<string name="sorry_error_subtext">Please screenshot this for &author; to fix…</string>
 	<string name="cannot_save">This link is not supported…</string>
 
 	<!-- Settings -->

@@ -11,8 +11,6 @@ import androidx.documentfile.provider.DocumentFile
 import link.standen.michael.imagesaver.manager.ProgressManager
 import link.standen.michael.imagesaver.util.StorageHelper
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
 import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL

@@ -11,7 +11,7 @@ import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import link.standen.michael.imagesaver.R
 import link.standen.michael.imagesaver.saver.SaverStrategy
-import link.standen.michael.imagesaver.saver.SaverFactory
+import link.standen.michael.imagesaver.util.SaverFactory
 import link.standen.michael.imagesaver.util.IntentHelper
 import link.standen.michael.imagesaver.util.StorageHelper.STORAGE_PERMISSIONS
 
@@ -23,7 +23,6 @@ class SaverActivity : Activity() {
 		const val REQUEST_CODE_FOLDER_SELECT = 2
 	}
 
-	private val saverFactory = SaverFactory()
 	private var saver: SaverStrategy? = null
 	private var imageLoaded = false
 	private var saveClicked = false
@@ -43,7 +42,7 @@ class SaverActivity : Activity() {
 
 		// Create saver in background
 		Thread {
-			saver = saverFactory.createSaver(intent)
+			saver = SaverFactory.createSaver(intent)
 			if (saver == null) {
 				Log.w(TAG, "Saver load failed")
 				noSaver()

@@ -1,23 +1,20 @@
-package link.standen.michael.imagesaver.saver
+package link.standen.michael.imagesaver.util
 
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import link.standen.michael.imagesaver.util.IntentHelper
-import link.standen.michael.imagesaver.util.UrlHelper
+import link.standen.michael.imagesaver.saver.*
 
 /**
  * A factory to create the relevant saver
  */
-class SaverFactory {
+object SaverFactory {
 
-	companion object {
-		const val TAG = "SaverFactory"
-		const val IMGUR_REGEX = """^https?:\/\/[m.]?imgur\.com\/[0-z\/]+"""
-		const val REDDIT_REGEX = """^https?:\/\/[0-z]*.?reddit\.com\/[^\s]+"""
-		const val TWITTER_REGEX = """^https?:\/\/twitter\.com\/[0-z]+/status/[0-z]+"""
-		const val IMAGE_URL_REGEX = """.*(?i)(png|jpg|jpeg|gif)(\?[^\s]*)?$"""
-	}
+	private const val TAG = "SaverFactory"
+	private const val IMGUR_REGEX = """^https?:\/\/[m.]?imgur\.com\/[0-z\/]+"""
+	private const val REDDIT_REGEX = """^https?:\/\/[0-z]*.?reddit\.com\/[^\s]+"""
+	private const val TWITTER_REGEX = """^https?:\/\/twitter\.com\/[0-z]+/status/[0-z]+"""
+	private const val IMAGE_URL_REGEX = """.*(?i)(png|jpg|jpeg|gif)(\?[^\s]*)?$"""
 
 	/**
 	 * Create the relevant saver
@@ -37,19 +34,35 @@ class SaverFactory {
 					val url = UrlHelper.resolveRedirects(UrlHelper.useHttps(originalUrl))
 					Log.d(TAG, "Converted: $url")
 					// Find match
-					if (regexMatches(IMGUR_REGEX, url)) {
+					if (regexMatches(
+							IMGUR_REGEX,
+							url
+						)
+					) {
 						Log.i(TAG, "Using ImgurSaver")
 						return ImgurSaver(url)
 					}
-					if (regexMatches(REDDIT_REGEX, url)) {
+					if (regexMatches(
+							REDDIT_REGEX,
+							url
+						)
+					) {
 						Log.i(TAG, "Using RedditSaver")
 						return RedditSaver(url)
 					}
-					if (regexMatches(IMAGE_URL_REGEX, url)) {
+					if (regexMatches(
+							IMAGE_URL_REGEX,
+							url
+						)
+					) {
 						Log.i(TAG, "Using ImageUrlSaver")
 						return ImageUrlSaver(url)
 					}
-					if (regexMatches(TWITTER_REGEX, url)){
+					if (regexMatches(
+							TWITTER_REGEX,
+							url
+						)
+					){
 						Log.i(TAG, "Using TwitterSaver")
 						return TwitterSaver(url)
 					}

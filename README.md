@@ -2,6 +2,10 @@
 
 An android app that lets you save images to your phone using the share function.
 
+<a href="https://play.google.com/store/apps/details?id=link.standen.michael.imagesaver" target="_blank">
+	<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="80"/>
+</a>
+
 This app is based on [Phone Saver](https://github.com/ScreamingHawk/phone-saver) but only allows saving images.
 
 ## Description

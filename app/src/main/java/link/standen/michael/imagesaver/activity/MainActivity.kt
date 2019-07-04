@@ -18,13 +18,6 @@ class MainActivity : Activity() {
 	companion object {
 		const val TAG = "MainActivity"
 		const val PERMISSION_REQUEST_CODE = 2
-
-		const val CHANGE_LOG_CSS = """
-				body { padding: 0.8em; }
-				h1 { margin-left: 0px; font-size: 1.2em; }
-				ul { padding-left: 1.2em; }
-				li { margin-left: 0px; }
-			"""
 	}
 
 	override fun onCreate(savedInstanceState: android.os.Bundle?) {
@@ -45,7 +38,7 @@ class MainActivity : Activity() {
 	 * @param force Force the change log to be displayed, if false only displayed if new content.
 	 */
 	private fun showChangeLog(force: Boolean) {
-		val cl = ChangeLog(this, CHANGE_LOG_CSS)
+		val cl = ChangeLog(this, getChangeLogCSS())
 		if (force || cl.isFirstRun) {
 			if (cl.getChangeLog(false).size == 0){
 				// Force the display of the full dialog list.
@@ -56,6 +49,21 @@ class MainActivity : Activity() {
 			}
 		}
 	}
+
+	/**
+	 * Generate the change log CSS
+	 */
+	private fun getChangeLogCSS() = """
+				body {
+					padding: 0.8em;
+					background-color: ${getColorHex(R.color.colorChangeLogBackground)};
+					color: ${getColorHex(R.color.colorText)};
+				}
+				h1 { margin-left: 0px; font-size: 1.2em; }
+				ul { padding-left: 1.2em; }
+				li { margin-left: 0px; }
+			"""
+	private fun getColorHex(c: Int) = "#${Integer.toHexString(getColor(c) and 0x00ffffff)}"
 
 	/**
 	 * Test permissions are granted.

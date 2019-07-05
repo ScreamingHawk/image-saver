@@ -6,10 +6,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import link.standen.michael.imagesaver.R
+import link.standen.michael.imagesaver.manager.GalleryManager
 import link.standen.michael.imagesaver.saver.SaverStrategy
 import link.standen.michael.imagesaver.util.SaverFactory
 import link.standen.michael.imagesaver.util.IntentHelper
@@ -24,6 +26,7 @@ class SaverActivity : Activity() {
 	}
 
 	private var saver: SaverStrategy? = null
+	private var gallery: GalleryManager? = null
 	private var imageLoaded = false
 	private var saveClicked = false
 	private var saverError = false
@@ -48,6 +51,8 @@ class SaverActivity : Activity() {
 				noSaver()
 			} else {
 				Log.d(TAG, "Saver load successful")
+				// Initialise gallery
+				initialiseGallery()
 				val imageView = findViewById<ImageView>(R.id.image)
 				if (saver?.loadImage(imageView, this) != true){
 					// Image loading failed
@@ -67,6 +72,44 @@ class SaverActivity : Activity() {
 				}
 			}
 		}.start()
+	}
+
+	/**
+	 * Initialise the gallery buttons
+	 */
+	private fun initialiseGallery(){
+		gallery = saver?.getGalleryManager()
+		if (gallery != null){
+			// Set up buttons
+			val updateVisibility = fun(){
+				this@SaverActivity.runOnUiThread {
+					findViewById<ImageButton>(R.id.previous).visibility =
+						if (gallery?.hasPreviousImage() == true) View.VISIBLE else View.GONE
+					findViewById<ImageButton>(R.id.next).visibility =
+						if (gallery?.hasNextImage() == true) View.VISIBLE else View.GONE
+					// Reset fab icon
+					findViewById<FloatingActionButton>(R.id.fab).setImageResource(R.drawable.white_save)
+				}
+			}
+			findViewById<ImageButton>(R.id.previous).setOnClickListener {
+				// Show the previous image
+				Thread {
+					gallery?.showPreviousImage(findViewById(R.id.image), this@SaverActivity)
+					updateVisibility()
+				}.start()
+			}
+			findViewById<ImageButton>(R.id.next).setOnClickListener {
+				// Show the next image
+				Thread {
+					gallery?.showNextImage(findViewById(R.id.image), this@SaverActivity)
+					updateVisibility()
+				}.start()
+			}
+			updateVisibility()
+			Log.d(TAG, "Loaded gallery")
+		} else {
+			Log.d(TAG, "No gallery to load")
+		}
 	}
 
 	/**
@@ -109,11 +152,14 @@ class SaverActivity : Activity() {
 				}
 			}
 			if (saveResult) {
+				Log.d(TAG, "Save successful")
 				runOnUiThread {
 					fab.setImageResource(R.drawable.white_ok)
 				}
-				finish()
-				Log.d(TAG, "Save successful")
+				if (gallery == null) {
+					// Exit on save success if not in a gallery
+					finish()
+				}
 			} else {
 				// Failed
 				Log.e(TAG, "Unable to save")

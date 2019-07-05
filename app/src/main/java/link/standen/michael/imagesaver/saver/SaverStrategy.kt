@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.widget.ImageView
+import link.standen.michael.imagesaver.manager.GalleryManager
 
 /**
  * Interface for saver classes
@@ -20,4 +21,9 @@ interface SaverStrategy {
 	 * Saves the file to the supplied folder
 	 */
 	fun save(context: Context, folder: Uri? = null): Boolean
+
+	/**
+	 * Returns a gallery manager in case the saver supports multiple images
+	 */
+	fun getGalleryManager(): GalleryManager? = null
 }

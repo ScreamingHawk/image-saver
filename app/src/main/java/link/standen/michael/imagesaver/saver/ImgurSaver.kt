@@ -48,9 +48,9 @@ class ImgurSaver(url: String): EnhancedImageUrlSaver(), GalleryManager {
 	}
 
 	/**
-	 * Returns this as the gallery manager
+	 * Returns this as the gallery manager if more than one image
 	 */
-	override fun getGalleryManager(): GalleryManager? = this
+	override fun getGalleryManager(): GalleryManager? = if (imageList.size > 1) this else null
 
 	/**
 	 * Returns true if there is a next image

@@ -13,6 +13,7 @@ object SaverFactory {
 	private const val TAG = "SaverFactory"
 	private const val IMGUR_REGEX = """^https?:\/\/[m.]?imgur\.com\/[0-z\/]+"""
 	private const val REDDIT_REGEX = """^https?:\/\/[0-z]*.?reddit\.com\/[^\s]+"""
+	private const val CHAN_REGEX = """^https?:\/\/boards\.4chan\.org\/[0-z]+\/thread\/[0-9]+(\/[^\s]*)?"""
 	private const val TWITTER_REGEX = """^https?:\/\/twitter\.com\/[0-z]+/status/[0-z]+"""
 	private const val IMAGE_URL_REGEX = """.*(?i)(png|jpg|jpeg|gif)(\?[^\s]*)?$"""
 
@@ -49,6 +50,14 @@ object SaverFactory {
 					) {
 						Log.i(TAG, "Using RedditSaver")
 						return RedditSaver(url)
+					}
+					if (regexMatches(
+							CHAN_REGEX,
+							url
+						)
+					) {
+						Log.i(TAG, "Using ChanSaver")
+						return ChanSaver(url)
 					}
 					if (regexMatches(
 							IMAGE_URL_REGEX,

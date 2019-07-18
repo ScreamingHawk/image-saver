@@ -15,7 +15,7 @@ import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
-class ImageUrlSaver(private val url: String): SaverStrategy {
+class ImageUrlSaver(private val url: String, private val fname: String? = null): SaverStrategy {
 
 	private var streamBytes: ByteArray? = null
 
@@ -118,6 +118,7 @@ class ImageUrlSaver(private val url: String): SaverStrategy {
 	 * Creates filename from the link
 	 */
 	private fun getFilename() =
-			url.replaceBeforeLast("/", "")
-				.replace("/", "")
+		fname ?:
+		url.replaceBeforeLast("/", "")
+			.replace("/", "")
 }

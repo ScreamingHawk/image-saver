@@ -21,7 +21,8 @@ class ImgurLoader(private val url: String): LoaderStrategy {
 
 		// Transform URL to API URL
 		val link = url.replaceBefore("imgur.com", "https://api.")
-			.replace("imgur.com", "imgur.com/3/")
+			.replace("imgur.com", "imgur.com/3")
+			.replace("/a/", "/album/") // Album is shortened
 
 		// Open it
 		val conn = URL(link).openConnection() as HttpURLConnection

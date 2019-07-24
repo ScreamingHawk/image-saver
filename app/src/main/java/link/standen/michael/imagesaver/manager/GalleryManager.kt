@@ -48,4 +48,10 @@ class GalleryManager(private val links: List<ImageItem>) {
 	 * Returns true if there is only a single image
 	 */
 	fun isSingle() = links.size < 2
+
+	/**
+	 * Returns a string representing the position in the gallery
+	 */
+	fun positionString() =
+		if (isSingle()) "" else "${currentIndex + 1} / ${links.size}"
 }

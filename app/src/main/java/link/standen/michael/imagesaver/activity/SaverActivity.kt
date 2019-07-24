@@ -91,6 +91,7 @@ class SaverActivity : Activity() {
 					if (gallery.hasNextImage()) View.VISIBLE else View.GONE
 				// Reset fab icon
 				findViewById<FloatingActionButton>(R.id.fab).setImageResource(R.drawable.white_save)
+				saveClicked = false
 			}
 		}
 		findViewById<ImageButton>(R.id.previous).setOnClickListener {

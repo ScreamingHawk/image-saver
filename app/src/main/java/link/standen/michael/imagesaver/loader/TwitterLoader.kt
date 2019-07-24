@@ -25,6 +25,8 @@ class TwitterLoader(private val url: String): LoaderStrategy {
 	}
 
 	override fun listImages(context: Context): List<ImageItem> {
+		val items = mutableListOf<ImageItem>()
+
 		// Authenticate
 		val authConn = URL("https://api.twitter.com/oauth2/token").openConnection() as HttpURLConnection
 		val apiBasic = Base64.encodeToString("$API_KEY:$API_SECRET".toByteArray(), Base64.NO_WRAP)
@@ -55,16 +57,19 @@ class TwitterLoader(private val url: String): LoaderStrategy {
 			conn.disconnect()
 			Log.d(TAG, response)
 			JSONObject(response)
-				.getJSONObject("entities")
-				?.getJSONArray("media")
-				?.getJSONObject(0) //TODO List?
-				?.getString("media_url_https")?.let {
-					Log.d(TAG, "Twitter image link: $it")
-					return listOf(ImageItem(it, getUrlEnd(it)))
+				.getJSONObject("extended_entities")
+				?.getJSONArray("media")?.let { medias ->
+					repeat(medias.length()) { i ->
+						medias.getJSONObject(i)
+							?.getString("media_url_https")?.let {
+								items.add(ImageItem(it, getUrlEnd(it)))
+							}
+					}
 				}
 		}
+		Log.d(TAG, "Twitter got ${items.size} links")
 		// Fail over to blank
-		return listOf()
+		return items
 	}
 
 }

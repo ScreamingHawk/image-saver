@@ -116,8 +116,10 @@ class SaverActivity : Activity() {
 	 * Loads the image and updates gallery view items
 	 */
 	private fun loadImage(item: ImageItem, imageView: ImageView = findViewById(R.id.image)): Boolean {
-		findViewById<TextView>(R.id.top_bar)?.text = item.fname
-		findViewById<TextView>(R.id.footnote)?.text = gallery.positionString()
+		runOnUiThread {
+			findViewById<TextView>(R.id.top_bar)?.text = item.fname
+			findViewById<TextView>(R.id.footnote)?.text = gallery.positionString()
+		}
 		return ImageHelper.loadImage(item, imageView, this@SaverActivity)
 	}
 

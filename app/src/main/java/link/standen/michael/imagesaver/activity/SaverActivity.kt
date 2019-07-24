@@ -53,7 +53,7 @@ class SaverActivity : Activity() {
 				// Initialise gallery
 				initialiseGallery(images)
 				val imageView = findViewById<ImageView>(R.id.image)
-				if (!ImageHelper.loadImage(gallery.getCurrentImage(), imageView, this)){
+				if (!loadImage(gallery.getCurrentImage(), imageView)){
 					// Image loading failed
 					Log.w(TAG, "Image load failed")
 					noSaver()
@@ -97,19 +97,24 @@ class SaverActivity : Activity() {
 		findViewById<ImageButton>(R.id.previous).setOnClickListener {
 			// Show the previous image
 			Thread {
-				ImageHelper.loadImage(gallery.getPreviousImage(), findViewById(R.id.image), this@SaverActivity)
+				loadImage(gallery.getPreviousImage())
 				updateVisibility()
 			}.start()
 		}
 		findViewById<ImageButton>(R.id.next).setOnClickListener {
 			// Show the next image
 			Thread {
-				ImageHelper.loadImage(gallery.getNextImage(), findViewById(R.id.image), this@SaverActivity)
+				loadImage(gallery.getNextImage())
 				updateVisibility()
 			}.start()
 		}
 		updateVisibility()
 		Log.d(TAG, "Loaded gallery")
+	}
+
+	private fun loadImage(item: ImageItem, imageView: ImageView = findViewById(R.id.image)): Boolean {
+		findViewById<TextView>(R.id.top_bar)?.text = item.fname
+		return ImageHelper.loadImage(item, imageView, this@SaverActivity)
 	}
 
 	/**

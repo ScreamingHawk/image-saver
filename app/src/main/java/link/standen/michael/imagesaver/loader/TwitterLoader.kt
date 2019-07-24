@@ -1,7 +1,10 @@
-package link.standen.michael.imagesaver.saver
+package link.standen.michael.imagesaver.loader
 
+import android.content.Context
 import android.util.Base64
 import android.util.Log
+import link.standen.michael.imagesaver.data.ImageItem
+import link.standen.michael.imagesaver.util.UrlHelper.getUrlEnd
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.net.HttpURLConnection
@@ -12,7 +15,7 @@ import java.net.URL
  * https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/get-statuses-show-id
  * GET https://api.twitter.com/1.1/statuses/show.json?id=<id>
  */
-class TwitterSaver(url: String): EnhancedImageUrlSaver() {
+class TwitterLoader(private val url: String): LoaderStrategy {
 
 	@Suppress("SpellCheckingInspection")
 	companion object {
@@ -21,7 +24,7 @@ class TwitterSaver(url: String): EnhancedImageUrlSaver() {
 		private const val API_SECRET = "roaDsuhoj6QTGckm48US06aI6r8doL3qGOLMzNqmDeekjpdcZn"
 	}
 
-	init {
+	override fun listImages(context: Context): List<ImageItem> {
 		// Authenticate
 		val authConn = URL("https://api.twitter.com/oauth2/token").openConnection() as HttpURLConnection
 		val apiBasic = Base64.encodeToString("$API_KEY:$API_SECRET".toByteArray(), Base64.NO_WRAP)
@@ -51,17 +54,17 @@ class TwitterSaver(url: String): EnhancedImageUrlSaver() {
 			val response = conn.inputStream.bufferedReader().use(BufferedReader::readText)
 			conn.disconnect()
 			Log.d(TAG, response)
-			val imageLink = JSONObject(response)
+			JSONObject(response)
 				.getJSONObject("entities")
 				?.getJSONArray("media")
-				?.getJSONObject(0)
-				?.getString("media_url_https")
-			Log.d(TAG, "Twitter image link: $imageLink")
-			// Create ImageUrlSaver
-			if (!imageLink.isNullOrBlank()) {
-				imageUrlSaver = ImageUrlSaver(imageLink)
-			}
+				?.getJSONObject(0) //TODO List?
+				?.getString("media_url_https")?.let {
+					Log.d(TAG, "Twitter image link: $it")
+					return listOf(ImageItem(it, getUrlEnd(it)))
+				}
 		}
+		// Fail over to blank
+		return listOf()
 	}
 
 }

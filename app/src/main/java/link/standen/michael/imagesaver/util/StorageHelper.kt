@@ -2,6 +2,7 @@ package link.standen.michael.imagesaver.util
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Environment
 import java.io.File
 import java.io.InputStream
@@ -11,13 +12,14 @@ import java.io.OutputStream
 object StorageHelper {
 
 	private const val TAG = "StorageHelper"
+	const val DEFAULT_FILENAME = "image.png"
 	const val STORAGE_PERMISSIONS = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
 	/**
 	 * Returns the folder to save into
 	 * https://developer.android.com/training/data-storage/files
 	 */
-	fun getPublicAlbumStorageDir(context: Context): File {
+	private fun getPublicAlbumStorageDir(context: Context): File {
 		val folder = File(
 			Environment.getExternalStoragePublicDirectory(
 				Environment.DIRECTORY_PICTURES), PreferenceHelper.getFolderName(context))
@@ -66,4 +68,17 @@ object StorageHelper {
 			bufferLength = inputStream.read(buffer)
 		}
 	}
+
+	/**
+	 * Save the uri to the output stream
+	 */
+	fun saveUri(uri: Uri, context: Context, fout: OutputStream): Boolean {
+		var success = false
+		context.contentResolver.openInputStream(uri)?.buffered()?.use {
+			fout.write(it.readBytes())
+			success = true
+		}
+		return success
+	}
+
 }

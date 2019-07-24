@@ -51,4 +51,11 @@ object UrlHelper {
 		return u
 	}
 
+	/**
+	 * Creates filename from the link
+	 */
+	fun getUrlEnd(link: String) =
+		link.replaceBeforeLast("/", "")
+			.replace("/", "")
+
 }

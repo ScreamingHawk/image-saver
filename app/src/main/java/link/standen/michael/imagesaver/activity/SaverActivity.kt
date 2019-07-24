@@ -11,9 +11,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import link.standen.michael.imagesaver.R
+import link.standen.michael.imagesaver.data.ImageItem
 import link.standen.michael.imagesaver.manager.GalleryManager
-import link.standen.michael.imagesaver.saver.SaverStrategy
-import link.standen.michael.imagesaver.util.SaverFactory
+import link.standen.michael.imagesaver.util.ImageHelper
+import link.standen.michael.imagesaver.util.LoaderFactory
 import link.standen.michael.imagesaver.util.IntentHelper
 import link.standen.michael.imagesaver.util.StorageHelper.STORAGE_PERMISSIONS
 
@@ -21,12 +22,10 @@ class SaverActivity : Activity() {
 
 	companion object {
 		const val TAG = "SaverActivity"
-		const val DEFAULT_FILENAME = "image.png"
 		const val REQUEST_CODE_FOLDER_SELECT = 2
 	}
 
-	private var saver: SaverStrategy? = null
-	private var gallery: GalleryManager? = null
+	private lateinit var gallery: GalleryManager
 	private var imageLoaded = false
 	private var saveClicked = false
 	private var saverError = false
@@ -45,16 +44,16 @@ class SaverActivity : Activity() {
 
 		// Create saver in background
 		Thread {
-			saver = SaverFactory.createSaver(intent)
-			if (saver == null) {
-				Log.w(TAG, "Saver load failed")
+			val images = LoaderFactory.createLoader(intent)?.listImages(this) ?: listOf()
+			if (images.isEmpty()) {
+				Log.w(TAG, "Loader load failed")
 				noSaver()
 			} else {
-				Log.d(TAG, "Saver load successful")
+				Log.d(TAG, "Loader load successful")
 				// Initialise gallery
-				initialiseGallery()
+				initialiseGallery(images)
 				val imageView = findViewById<ImageView>(R.id.image)
-				if (saver?.loadImage(imageView, this) != true){
+				if (!ImageHelper.loadImage(gallery.getCurrentImage(), imageView, this)){
 					// Image loading failed
 					Log.w(TAG, "Image load failed")
 					noSaver()
@@ -77,39 +76,39 @@ class SaverActivity : Activity() {
 	/**
 	 * Initialise the gallery buttons
 	 */
-	private fun initialiseGallery(){
-		gallery = saver?.getGalleryManager()
-		if (gallery != null){
-			// Set up buttons
-			val updateVisibility = fun(){
-				this@SaverActivity.runOnUiThread {
-					findViewById<ImageButton>(R.id.previous).visibility =
-						if (gallery?.hasPreviousImage() == true) View.VISIBLE else View.GONE
-					findViewById<ImageButton>(R.id.next).visibility =
-						if (gallery?.hasNextImage() == true) View.VISIBLE else View.GONE
-					// Reset fab icon
-					findViewById<FloatingActionButton>(R.id.fab).setImageResource(R.drawable.white_save)
-				}
-			}
-			findViewById<ImageButton>(R.id.previous).setOnClickListener {
-				// Show the previous image
-				Thread {
-					gallery?.showPreviousImage(findViewById(R.id.image), this@SaverActivity)
-					updateVisibility()
-				}.start()
-			}
-			findViewById<ImageButton>(R.id.next).setOnClickListener {
-				// Show the next image
-				Thread {
-					gallery?.showNextImage(findViewById(R.id.image), this@SaverActivity)
-					updateVisibility()
-				}.start()
-			}
-			updateVisibility()
-			Log.d(TAG, "Loaded gallery")
-		} else {
-			Log.d(TAG, "No gallery to load")
+	private fun initialiseGallery(images: List<ImageItem>){
+		gallery = GalleryManager(images)
+		if (gallery.isSingle()){
+			// No need to do all the set up
+			return
 		}
+		// Set up buttons
+		val updateVisibility = fun(){
+			this@SaverActivity.runOnUiThread {
+				findViewById<ImageButton>(R.id.previous).visibility =
+					if (gallery.hasPreviousImage()) View.VISIBLE else View.GONE
+				findViewById<ImageButton>(R.id.next).visibility =
+					if (gallery.hasNextImage()) View.VISIBLE else View.GONE
+				// Reset fab icon
+				findViewById<FloatingActionButton>(R.id.fab).setImageResource(R.drawable.white_save)
+			}
+		}
+		findViewById<ImageButton>(R.id.previous).setOnClickListener {
+			// Show the previous image
+			Thread {
+				ImageHelper.loadImage(gallery.getPreviousImage(), findViewById(R.id.image), this@SaverActivity)
+				updateVisibility()
+			}.start()
+		}
+		findViewById<ImageButton>(R.id.next).setOnClickListener {
+			// Show the next image
+			Thread {
+				ImageHelper.loadImage(gallery.getNextImage(), findViewById(R.id.image), this@SaverActivity)
+				updateVisibility()
+			}.start()
+		}
+		updateVisibility()
+		Log.d(TAG, "Loaded gallery")
 	}
 
 	/**
@@ -138,12 +137,13 @@ class SaverActivity : Activity() {
 		Thread {
 			var saveResult = false
 			try {
-				saveResult = (if (folder != null) saver?.save(this, folder) else saver?.save(this)) ?: false
+				saveResult = ImageHelper.saveImage(gallery.getCurrentImage(), this, folder)
 			} catch (e: Exception){
 				// Catch everything
 				Log.e(TAG, "Saving failed")
 				if (e.message != null) {
 					Log.e(TAG, e.message)
+					Log.e(TAG, Log.getStackTraceString(e))
 					runOnUiThread {
 						fab.setImageResource(R.drawable.white_error)
 					}
@@ -156,8 +156,8 @@ class SaverActivity : Activity() {
 				runOnUiThread {
 					fab.setImageResource(R.drawable.white_ok)
 				}
-				if (gallery == null) {
-					// Exit on save success if not in a gallery
+				if (gallery.isSingle()) {
+					// Exit on save success if only a single image
 					finish()
 				}
 			} else {
@@ -169,11 +169,10 @@ class SaverActivity : Activity() {
 	}
 
 	/**
-	 * Remove saver, set error message
+	 * Set error message
 	 */
 	private fun noSaver(){
 		saverError = true
-		saver = null
 		runOnUiThread {
 			findViewById<View>(R.id.image_placeholder).visibility = View.GONE
 			findViewById<View>(R.id.no_saver).visibility = View.VISIBLE

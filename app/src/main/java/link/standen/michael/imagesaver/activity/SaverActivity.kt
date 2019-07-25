@@ -90,7 +90,10 @@ class SaverActivity : Activity() {
 				findViewById<ImageButton>(R.id.next).visibility =
 					if (gallery.hasNextImage()) View.VISIBLE else View.GONE
 				// Reset fab icon
-				findViewById<FloatingActionButton>(R.id.fab).setImageResource(R.drawable.white_save)
+				findViewById<FloatingActionButton>(R.id.fab).apply {
+					setImageResource(R.drawable.white_save)
+					isEnabled = true
+				}
 				saveClicked = false
 			}
 		}
@@ -127,6 +130,7 @@ class SaverActivity : Activity() {
 	 * Save button clicked
 	 */
 	private fun saveClicked(fab: FloatingActionButton) {
+		Log.d(TAG, "Save clicked")
 		if (saverError){
 			// Error, ignore
 		}

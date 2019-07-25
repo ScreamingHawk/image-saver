@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+	<release version="2.0.0" versioncode="3">
+		<change>Support Imgur albums and galleries</change>
+		<change>Support 4chan threads</change>
+		<change>Support multiple Twitter images</change>
+		<change>Show filename when saving</change>
+		<change>Show position in gallery</change>
+		<change>Display errors to user</change>
+		<change>Fix saving multiple images to default location</change>
+		<change>Code refactor</change>
+	</release>
 	<release version="1.0.1" versioncode="2">
 		<change>Fix saving to default location</change>
 		<change>Fix settings menu</change>

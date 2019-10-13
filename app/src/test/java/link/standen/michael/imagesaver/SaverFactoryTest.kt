@@ -8,9 +8,9 @@ import com.nhaarman.mockito_kotlin.mock
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
-import link.standen.michael.imagesaver.saver.ImageUrlSaver
+import link.standen.michael.imagesaver.loader.ImageUrlLoader
 import link.standen.michael.imagesaver.util.LoaderFactory
-import link.standen.michael.imagesaver.saver.UriLoader
+import link.standen.michael.imagesaver.loader.UriLoader
 import link.standen.michael.imagesaver.util.UrlHelper
 import org.junit.Assert.*
 import org.junit.Before
@@ -70,34 +70,34 @@ class SaverFactoryTest {
 	private fun toClass(c: Any?) = c?.javaClass?.kotlin
 
 	@Test
-	fun createSaver_Null() {
+	fun createLoader_Null() {
 		// Image without uri is null
-		assertNull(toClass(LoaderFactory.createSaver(createIntent(mimeImagePng))))
-		assertNull(toClass(LoaderFactory.createSaver(createIntent(mimeImageJpg))))
-		assertNull(toClass(LoaderFactory.createSaver(createIntent(mimeImageSvg))))
+		assertNull(toClass(LoaderFactory.createLoader(createIntent(mimeImagePng))))
+		assertNull(toClass(LoaderFactory.createLoader(createIntent(mimeImageJpg))))
+		assertNull(toClass(LoaderFactory.createLoader(createIntent(mimeImageSvg))))
 		// Text without extra is null
-		assertNull(toClass(LoaderFactory.createSaver(createIntent(mimeTextPlain))))
+		assertNull(toClass(LoaderFactory.createLoader(createIntent(mimeTextPlain))))
 		// Non image link is null
-		assertNull(toClass(LoaderFactory.createSaver(createTextIntent("https://michael.standen.link/image.html"))))
+		assertNull(toClass(LoaderFactory.createLoader(createTextIntent("https://michael.standen.link/image.html"))))
 	}
 
 	@Test
-	fun createSaver_Uri() {
+	fun createLoader_Uri() {
 		// All image types with uri
 		assertNotNull(mockUri)
-		assertEquals(UriLoader::class, toClass(LoaderFactory.createSaver(createIntent(mimeImagePrefix, mockUri))))
-		assertEquals(UriLoader::class, toClass(LoaderFactory.createSaver(createIntent(mimeImagePng, mockUri))))
-		assertEquals(UriLoader::class, toClass(LoaderFactory.createSaver(createIntent(mimeImageJpg, mockUri))))
-		assertEquals(UriLoader::class, toClass(LoaderFactory.createSaver(createIntent(mimeImageSvg, mockUri))))
+		assertEquals(UriLoader::class, toClass(LoaderFactory.createLoader(createIntent(mimeImagePrefix, mockUri))))
+		assertEquals(UriLoader::class, toClass(LoaderFactory.createLoader(createIntent(mimeImagePng, mockUri))))
+		assertEquals(UriLoader::class, toClass(LoaderFactory.createLoader(createIntent(mimeImageJpg, mockUri))))
+		assertEquals(UriLoader::class, toClass(LoaderFactory.createLoader(createIntent(mimeImageSvg, mockUri))))
 	}
 
 	@Test
-	fun createSaver_ImageUrl() {
+	fun createLoader_ImageUrl() {
 		// Urls ending with image extension use Image Url
-		assertEquals(ImageUrlSaver::class, toClass(LoaderFactory.createSaver(createTextIntent("https://michael.standen.link/image.jpg"))))
-		assertEquals(ImageUrlSaver::class, toClass(LoaderFactory.createSaver(createTextIntent("https://michael.standen.link/image.jpeg"))))
-		assertEquals(ImageUrlSaver::class, toClass(LoaderFactory.createSaver(createTextIntent("https://michael.standen.link/image.png"))))
+		assertEquals(ImageUrlLoader::class, toClass(LoaderFactory.createLoader(createTextIntent("https://michael.standen.link/image.jpg"))))
+		assertEquals(ImageUrlLoader::class, toClass(LoaderFactory.createLoader(createTextIntent("https://michael.standen.link/image.jpeg"))))
+		assertEquals(ImageUrlLoader::class, toClass(LoaderFactory.createLoader(createTextIntent("https://michael.standen.link/image.png"))))
 		// Case insensitive
-		assertEquals(ImageUrlSaver::class, toClass(LoaderFactory.createSaver(createTextIntent("https://michael.standen.link/image.JPEG"))))
+		assertEquals(ImageUrlLoader::class, toClass(LoaderFactory.createLoader(createTextIntent("https://michael.standen.link/image.JPEG"))))
 	}
 }

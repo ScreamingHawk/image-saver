@@ -19,6 +19,7 @@ import link.standen.michael.imagesaver.util.LoaderFactory
 import link.standen.michael.imagesaver.util.IntentHelper
 import link.standen.michael.imagesaver.util.PreferenceHelper
 import link.standen.michael.imagesaver.util.StorageHelper.STORAGE_PERMISSIONS
+import java.io.FileNotFoundException
 
 class SaverActivity : Activity() {
 
@@ -55,7 +56,13 @@ class SaverActivity : Activity() {
 				// Initialise gallery
 				initialiseGallery(images)
 				val imageView = findViewById<ImageView>(R.id.image)
-				if (!loadImage(gallery.getCurrentImage(), imageView)){
+				val loaded = try {
+					loadImage(gallery.getCurrentImage(), imageView)
+				} catch (e: FileNotFoundException){
+					Log.e(TAG, "Unable to load image", e)
+					false
+				}
+				if (!loaded){
 					// Image loading failed
 					Log.w(TAG, "Image load failed")
 					noSaver()

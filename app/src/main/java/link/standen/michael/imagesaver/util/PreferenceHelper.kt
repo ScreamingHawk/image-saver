@@ -8,6 +8,7 @@ object PreferenceHelper {
 
 	private const val FOLDER_NAME_KEY = "folder_name"
 	const val NO_MEDIA_KEY = "no_media"
+	private const val COMPLETED_TOAST_KEY = "completed_toast"
 
 	/**
 	 * Gets a string from the preference manager
@@ -30,5 +31,10 @@ object PreferenceHelper {
 	 * Returns the no media file setting
 	 */
 	fun getNoMedia(context: Context) = getBoolean(context, NO_MEDIA_KEY, false)
+
+	/**
+	 * Returns the toast on save completed setting
+	 */
+	fun getCompletedToast(context: Context) = getBoolean(context, COMPLETED_TOAST_KEY, false)
 
 }

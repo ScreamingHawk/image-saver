@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import link.standen.michael.imagesaver.R
 import link.standen.michael.imagesaver.data.ImageItem
@@ -16,6 +17,7 @@ import link.standen.michael.imagesaver.manager.GalleryManager
 import link.standen.michael.imagesaver.util.ImageHelper
 import link.standen.michael.imagesaver.util.LoaderFactory
 import link.standen.michael.imagesaver.util.IntentHelper
+import link.standen.michael.imagesaver.util.PreferenceHelper
 import link.standen.michael.imagesaver.util.StorageHelper.STORAGE_PERMISSIONS
 
 class SaverActivity : Activity() {
@@ -167,9 +169,13 @@ class SaverActivity : Activity() {
 					return@Thread
 				}
 			}
+			val saveToast = PreferenceHelper.getCompletedToast(this)
 			if (saveResult) {
 				Log.d(TAG, "Save successful")
 				runOnUiThread {
+					if (saveToast){
+						Toast.makeText(this, R.string.toast_save_success, Toast.LENGTH_SHORT).show()
+					}
 					fab.setImageResource(R.drawable.white_ok)
 				}
 				if (gallery.isSingle()) {
@@ -179,6 +185,11 @@ class SaverActivity : Activity() {
 			} else {
 				// Failed
 				Log.e(TAG, "Unable to save")
+				if (saveToast){
+					runOnUiThread {
+						Toast.makeText(this, R.string.toast_save_failed, Toast.LENGTH_SHORT).show()
+					}
+				}
 				showError(fab=fab)
 			}
 		}.start()

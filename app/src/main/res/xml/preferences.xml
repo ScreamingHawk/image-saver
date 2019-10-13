@@ -12,4 +12,10 @@
 		app:summary="@string/setting_no_media_summary"
 		app:defaultValue="false" />
 
+	<CheckBoxPreference
+		app:key="completed_toast"
+		app:title="@string/setting_completed_toast_title"
+		app:summary="@string/setting_completed_toast_summary"
+		app:defaultValue="false" />
+
 </androidx.preference.PreferenceScreen>

@@ -22,6 +22,10 @@
 	<string name="previous_button">Prev</string>
 	<string name="next_button">Next</string>
 
+	<!-- Notification -->
+	<string name="toast_save_success">Saved successfully</string>
+	<string name="toast_save_failed">Saving failed</string>
+
 	<!-- Settings -->
 	<string name="title_activity_settings">Settings</string>
 
@@ -31,6 +35,9 @@
 	<string name="setting_no_media_title">Hide saved images</string>
 	<string name="setting_no_media_summary">Prevent images showing in gallery applications.
 		Note: This only applies to the default folder</string>
+
+	<string name="setting_completed_toast_title">Save completed notification</string>
+	<string name="setting_completed_toast_summary">Display a notification when saving is completed</string>
 
 	<!-- Credits -->
 	<string name="credits_version">v%1$s</string>

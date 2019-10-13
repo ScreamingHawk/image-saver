@@ -19,10 +19,12 @@ class RedditLoader(private val url: String): LoaderStrategy {
 	}
 
 	override fun listImages(context: Context): List<ImageItem> {
+		val items = mutableListOf<ImageItem>()
+
 		// Transform URL to API URL
 		val link = url.substringBefore("?")
 			.substringBefore("#") +
-				"/.json"
+			"/.json"
 
 		// Open it
 		val conn = URL(link).openConnection() as HttpURLConnection
@@ -33,13 +35,18 @@ class RedditLoader(private val url: String): LoaderStrategy {
 		JSONArray(response)
 			.getJSONObject(0)
 			?.getJSONObject("data")
-			?.getJSONArray("children")
-			?.getJSONObject(0) // TODO list?
-			?.getJSONObject("data")
-			?.getString("url")?.let {
-				Log.d(TAG, "Reddit image link: $it")
-				return listOf(ImageItem(it, getUrlEnd(it)))
-			} ?: return listOf()
+			?.getJSONArray("children")?.let { data ->
+				repeat(data.length()) { i ->
+					data.getJSONObject(i)
+						?.getJSONObject("data")
+						?.getString("url")?.let {
+							items.add(ImageItem(it, getUrlEnd(it)))
+						}
+				}
+			}
+		Log.d(TAG, "Reddit got ${items.size} links")
+		// Fail over to blank
+		return items
 	}
 
 }

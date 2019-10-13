@@ -32,14 +32,16 @@ class ImgurLoader(private val url: String): LoaderStrategy {
 		val response = conn.inputStream.bufferedReader().use(BufferedReader::readText)
 		Log.d(TAG, response)
 		// Store all the image links
-		val imagesArray = JSONObject(response)
+		JSONObject(response)
 			.getJSONObject("data")
-			?.getJSONArray("images")
-		repeat(imagesArray?.length() ?: 0) { i ->
-			imagesArray?.getJSONObject(i)?.getString("link")?.let {
-				links.add(ImageItem(it, getUrlEnd(it)))
+			?.getJSONArray("images")?.let { images ->
+				repeat(images.length()) { i ->
+					images.getJSONObject(i)?.getString("link")?.let {
+						links.add(ImageItem(it, getUrlEnd(it)))
+					}
+				}
 			}
-		}
+
 		Log.d(TAG, "Imgur got ${links.size} links")
 		return links
 	}

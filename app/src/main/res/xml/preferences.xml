@@ -18,4 +18,10 @@
 		app:summary="@string/setting_completed_toast_summary"
 		app:defaultValue="false" />
 
+	<CheckBoxPreference
+		app:key="random_filename"
+		app:title="@string/setting_random_filename_title"
+		app:summary="@string/setting_random_filename_summary"
+		app:defaultValue="false" />
+
 </androidx.preference.PreferenceScreen>

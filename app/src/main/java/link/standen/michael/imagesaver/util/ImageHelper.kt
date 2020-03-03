@@ -13,6 +13,7 @@ import java.io.ByteArrayOutputStream
 import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.*
 
 /**
  * Loads into into views, saves images
@@ -89,21 +90,27 @@ object ImageHelper {
 	fun saveImage(item: ImageItem, activity: Activity, folder: Uri?): Boolean {
 		var success = false
 
+		val mime = MimeTypeMap.getFileExtensionFromUrl(item.fname)
+
+		val fname = if (PreferenceHelper.isRandomFilename(activity)){
+			UUID.randomUUID().toString() + '.' + mime
+		} else item.fname
+
 		// https://stackoverflow.com/a/26765884/2027146
 		if (folder != null) {
 			DocumentFile.fromTreeUri(activity, folder)?.createFile(
-				MimeTypeMap.getFileExtensionFromUrl(item.fname),
-				item.fname
+				mime,
+				fname
 			)?.let { file ->
 				activity.contentResolver.openOutputStream(file.uri)?.use { fout ->
 					success = saveToStream(item, fout, activity)
 				}
 			} ?: run {
-				Log.e(TAG, "Unable to create file ${item.fname} at ${folder.path}")
+				Log.e(TAG, "Unable to create file $fname at ${folder.path}")
 			}
 		} else {
 			// No folder, use default
-			StorageHelper.getDefaultOutputStream(activity, item.fname).use { fout ->
+			StorageHelper.getDefaultOutputStream(activity, fname).use { fout ->
 				success = saveToStream(item, fout, activity)
 			}
 		}

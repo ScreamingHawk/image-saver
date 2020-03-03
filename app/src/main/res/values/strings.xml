@@ -39,6 +39,9 @@
 	<string name="setting_completed_toast_title">Save completed notification</string>
 	<string name="setting_completed_toast_summary">Display a notification when saving is completed</string>
 
+	<string name="setting_random_filename_title">Randomize filename</string>
+	<string name="setting_random_filename_summary">Save files with a randomized filename</string>
+
 	<!-- Credits -->
 	<string name="credits_version">v%1$s</string>
 	<string name="title_activity_credits">About &appname;</string>

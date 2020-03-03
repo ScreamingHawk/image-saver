@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+	<release version="2.0.2" versioncode="5">
+		<change>Add setting to randomize filename</change>
+	</release>
 	<release version="2.0.1" versioncode="4">
 		<change>Add setting toggle for notification on successful save</change>
 		<change>Support multiple images from Reddit link</change>

@@ -36,7 +36,14 @@ class SaverActivity : Activity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.saver_activity)
-		findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { fab -> saveClicked(fab as FloatingActionButton) }
+
+		val fab = findViewById<FloatingActionButton>(R.id.fab)
+		if (android.os.Build.VERSION.SDK_INT >= 29){
+			//FIXME The default behaviour doesn't work in Android Q
+			fab.visibility = View.GONE
+
+		}
+		fab.setOnClickListener { f -> saveClicked(f as FloatingActionButton) }
 		findViewById<FloatingActionButton>(R.id.fab2).setOnClickListener { selectLocation() }
 
 		// Display link
@@ -167,12 +174,12 @@ class SaverActivity : Activity() {
 				// Catch everything
 				Log.e(TAG, "Saving failed")
 				if (e.message != null) {
-					Log.e(TAG, e.message)
+					Log.e(TAG, e.message!!)
 					Log.e(TAG, Log.getStackTraceString(e))
 					runOnUiThread {
 						fab.setImageResource(R.drawable.white_error)
 					}
-					showError(e.message as String, fab)
+					showError(e.message, fab)
 					return@Thread
 				}
 			}

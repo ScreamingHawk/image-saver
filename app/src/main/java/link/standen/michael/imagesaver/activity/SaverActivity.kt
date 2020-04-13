@@ -38,8 +38,8 @@ class SaverActivity : Activity() {
 		setContentView(R.layout.saver_activity)
 
 		val fab = findViewById<FloatingActionButton>(R.id.fab)
-		if (android.os.Build.VERSION.SDK_INT >= 29){
-			//FIXME The default behaviour doesn't work in Android Q
+		if (android.os.Build.VERSION.SDK_INT >= 30){
+			//FIXME The default behaviour doesn't work in Android P
 			fab.visibility = View.GONE
 
 		}

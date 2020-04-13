@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+	<release version="2.0.3" versioncode="6">
+		<change>Enable one click save for Android P</change>
+	</release>
 	<release version="2.0.2" versioncode="5">
 		<change>Add setting to randomize filename</change>
 	</release>
